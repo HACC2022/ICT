@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="css/css-ninom/bootstrap.css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="icon" href="playground/static/logo.png" type="image/x-icon">
+    <title>URL, Shortener</title>
+    <style>
+        .container{
+            border: 1px solid #4287f5;
+            height: 250px;
+            width: 600px;
+            text-align: center;
+            margin-top: 200px;
+            padding-bottom: 100px;
+            
+        }
+        div{
+            padding-top: 10px;
+            padding-bottom: 5px;
+        }
+        
+       
+        
+        
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <h1>Hawaii URL Shortener</h1>
+        <form>
+            <div class="form-group">
+            <label id="urlLabel"for="url">Enter URL</label>
+            <input type="url" class="form-control" id="inputUrl" aria-describedby="inputUrl" placeholder="Enter URL">
+            </div>
+            <div class="form-group">
+                <label for="urlOutput">Shortened URL</label>
+                <input type="text" readonly class="form-control-plaintext" id="urlOutput" rows="3" >
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="height:35px ;">Submit</button>
+            </div>
+            
+            
+        </form>
+    </div>
+
+    
+  </body>
+</html>
+
+
+
