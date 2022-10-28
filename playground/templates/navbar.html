@@ -1,8 +1,21 @@
 {% load static %}
 
+<style>
+  .nav-link{
+    opacity: 80%;
+  }
+  .nav-link:hover{
+    background-color:rgb(31, 31, 31);
+    border-radius: 10%;
+    opacity: 100%;
+  }
+  .nav-link:active{
+    background-color: black;
+    transform: 3px;
+  }
+</style>
 
-
-<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #237d68;">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #237d68;">
     <a class="navbar-brand" href="index.html"></a>
     <img src="{% static '/logo.png' %}" width="500" height="70" class="d-inline-block align-top" alt="banner" style="padding-right: 30px;"> 
     </a>
@@ -13,16 +26,16 @@
     </button>
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto nav-tabs">
+      <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a style ="text-align: center;" class="navbar-brand nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+          <a style ="text-align: center; color: aliceblue;" class="navbar-brand nav-link" href="/">Home<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active">
-          <a style ="text-align: center;" class="nav-link navbar-brand" href="/manage/">URL Links<span class="sr-only">(current)</span></a>
+          <a style ="text-align: center; color: aliceblue;" class="nav-link navbar-brand" href="/manage/">URL Links<span class="sr-only">(current)</span></a>
           </li>
 
           <li class="nav-item active">
-            <a style ="text-align: center;" class="nav-link navbar-brand" href="{% url 'logoutUser' %}">Logout<span class="sr-only">(current)</span></a>
+            <a style ="text-align: center; color: aliceblue;" class="nav-link navbar-brand" href="{% url 'logoutUser' %}">Logout<span class="sr-only">(current)</span></a>
           </li>
       </ul>
 
