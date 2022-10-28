@@ -1,5 +1,5 @@
 import re
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 import uuid
 from .models import Url
 from django.http import HttpResponse
@@ -20,11 +20,9 @@ def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
     return redirect(long_url.longLink)
 
-def manage_view(request):
-    return render (request, 'manage.html', {})
-
-def get_short(request, pk):
-    return 
-
-def get_long(request, pk):
-    return
+def manage_view(request, id):
+    queryset = Url.objects.all()
+    context = {
+        'object_list': queryset
+    }
+    return render (request, 'manage.html', context)
