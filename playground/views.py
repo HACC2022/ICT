@@ -19,3 +19,6 @@ def shorten(request):
 def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
     return redirect(long_url.longLink)
+
+def manage_view(request):
+    return render (request, 'manage.html', {})
