@@ -22,3 +22,9 @@ def forward(request, pk):
 
 def manage_view(request):
     return render (request, 'manage.html', {})
+
+def get_short(request, pk):
+    return 
+
+def get_long(request, pk):
+    return
