@@ -20,10 +20,10 @@
 
 <div class="row" style="padding-left: 30px; padding-top: 30px;">
     <div class="col">
-        <input type="search-field" class="form-control" placeholder="Type here to Search" data-search>
+        <input type="search-field" class="form-control" placeholder="Type here to Search" >
     </div>
     <div class="col">
-        <button type="search-btn" class="btn btn-primary" onclick="searchOnClick()">Search</button>
+        <button type="search-btn" class="btn btn-primary">Search</button>
     </div>
 </div>
 
@@ -51,19 +51,6 @@
 </div>
 
 <script>
-    urls = []
-    const searchInput = document.querySelector("[data-search]")
-    searchInput.addEventListener("input", (e) =>{
-        const value = e.target.value.toLowerCase()
-        urls.forEach(url => {
-            const isVisible =
-                url.longLink.toLowerCase().include(value)
-            url.element.classList.toggle("hide", !isVisible)
-        });
-    })
-
-    fetch("{{object_list}}")
-
 </script>
 
 {%endblock%}

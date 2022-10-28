@@ -20,7 +20,7 @@ def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
     return redirect(long_url.longLink)
 
-def manage_view(request, id):
+def manage_view(request):
     queryset = Url.objects.all()
     context = {
         'object_list': queryset
