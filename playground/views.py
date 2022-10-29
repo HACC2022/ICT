@@ -1,8 +1,10 @@
 import re
 from django.shortcuts import get_object_or_404, render, redirect
 import uuid
+
+import pkg_resources
 from .models import Url
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -31,6 +33,16 @@ def manage_view(request):
         'object_list': queryset
     }
     return render (request, 'manage.html', context)
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+def manage_view_delete(request, pk, *args, **kwargs):
+    if is_ajax(request):
+        obj = Url.objects.get(pk=pk)
+        obj.delete()
+        return JsonResponse({"message":"success"})
+    return JsonResponse({"message":"Something is wrong"})
 
 def loginPage(request):
    

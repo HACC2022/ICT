@@ -39,11 +39,11 @@
         </thead>
         <tbody>
             {%for instance in object_list %}
-            <tr>
+            <tr class = "record">
                 <td><button type="copy" class="btn btn-primary" style="height:35px;">Copy</button></td>
                 <td class="col-3">localhost:8000/{{instance.shortCode}}</td>
                 <td class="col-9" style="border-left-style: solid;">{{instance.longLink}}</td>
-                <td><button type="delete" class="button" style="height:35px;">Delete</button></td>
+                <td><a href="{%url 'delete_data' instance.id%}" type = "button" id = "delete" class="button nav-link delete" style="height:35px; opacity: 100%;">Delete</a></td>
             </tr>
             {%endfor %}
         </tbody>
@@ -51,6 +51,31 @@
 </div>
 
 <script>
+    $(".delete").on("click", function(e){
+        e.preventDefault();
+        var $this = $(this);
+        if (confirm("Are you Fucking Sure?")){
+            $.ajax({
+                url: $this.attr("href"),
+                type: "GET",
+                dataType: "json",
+                success: function(resp){
+                    if (resp.message === 'success'){
+                        $this.parents('.record').fadeOut("slow", function(){
+                            $this.parents('.record').remove();
+                        });
+                    }
+                    else{
+                        alert(resp.message);
+                    }
+                },
+                error: function(resp){
+                    console.log("something is wrong");
+                }
+            });
+        }
+        return false;
+    })
 </script>
 
 {%endblock%}

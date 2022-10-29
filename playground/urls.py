@@ -7,5 +7,6 @@ urlpatterns = [
     path('<str:pk>', views.forward, name='forward'),
     path('manage/', views.manage_view, name='manage'),
     path('login/', views.loginPage, name='login'),
-    path('logout/', views.logoutUser, name='logoutUser')
+    path('logout/', views.logoutUser, name='logoutUser'),
+    path('delete/<pk>/', views.manage_view_delete, name='delete_data')
 ]
