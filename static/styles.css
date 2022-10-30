@@ -13,16 +13,16 @@
     padding-bottom: 5px;
 }
 
-.button{
+.button-delete{
     background-color: rgb(187, 0, 0);
     border-color: rgb(187, 0, 0);
     border-radius: 10%;
     box-shadow: none;
     color: white;
 }
-.button:hover {
-  background-color:rgb(255, 145, 145);
-  border-color: rgb(255, 145, 145);
+.button-delete:hover {
+  background-color:#ff7676;
+  border-color: #ff7676;;
   color: black;
   transition: 0.1s;
 }

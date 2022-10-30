@@ -15,7 +15,7 @@
                         short-add={{instance.shortCode}}>Copy</button></td>
                 <td class="col-3">localhost:8000/{{instance.shortCode}}</td>
                 <td class="col-9" style="border-left-style: solid;">{{instance.longLink}}</td>
-                <td><a href="{%url 'delete_data' instance.id%}" type="button" id="delete" class="button nav-link delete"
+                <td><a href="{%url 'delete_data' instance.id%}" id="delete" class=" delete btn btn-danger"
                         style="height:35px; opacity: 100%;">Delete</a></td>
             </tr>
             {%endfor %}
