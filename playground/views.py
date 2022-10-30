@@ -45,6 +45,7 @@ def search_view(request):
         }
         html = render_to_string('search_result.html', context)
         return JsonResponse(html, safe=False)
+        
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
