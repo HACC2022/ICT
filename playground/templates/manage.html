@@ -44,7 +44,7 @@
     $(".delete").on("click", function (e) {
         e.preventDefault();
         var $this = $(this);
-        if (confirm("Are you Fucking Sure?")) {
+        if (confirm("Are you Sure?")) {
             $.ajax({
                 url: $this.attr("href"),
                 type: "GET",
