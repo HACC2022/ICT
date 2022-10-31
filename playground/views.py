@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 import uuid
 
 import pkg_resources
+from django.template.loader import render_to_string
+
 from .models import Url
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
@@ -34,6 +36,16 @@ def manage_view(request):
     }
     return render (request, 'manage.html', context)
 
+def search_view(request):
+    if request.method == 'POST':
+        word = request.POST['keyword']
+        queryset = Url.objects.filter(longLink__icontains=word)
+        context = {
+            'object_list': queryset
+        }
+        html = render_to_string('search_result.html', context)
+        return JsonResponse(html, safe=False)
+        
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 

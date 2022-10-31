@@ -2,28 +2,14 @@
 
 {%block content %}
 
-<style>
-    .button{
-        background-color: rgb(187, 0, 0);
-        border-color: rgb(187, 0, 0);
-        border-radius: 10%;
-        box-shadow: none;
-        color: white;
-    }
-    .button:hover {
-      background-color:rgb(255, 145, 145);
-      border-color: rgb(255, 145, 145);
-      color: black;
-      transition: 0.1s;
-  }
-</style>
-
 <div class="row" style="padding-left: 30px; padding-top: 30px;">
     <div class="col">
-        <input type="search-field" class="form-control" placeholder="Type here to Search" >
+        {% csrf_token %}
+        <input type="search-field" class="form-control" name="searchfield" id="searchfield" placeholder="Type here to Search">
     </div>
     <div class="col">
-        <button type="search-btn" class="btn btn-primary">Search</button>
+        <button type="button" class="btn btn-primary" id="search" name="search">Search</button>
+        <button type="button" class="btn btn-primary" id="reset" name="reset" onClick="window.location.reload();">reset Search</button>
     </div>
 </div>
 
@@ -39,11 +25,13 @@
         </thead>
         <tbody>
             {%for instance in object_list %}
-            <tr class = "record">
-                <td><button type="copy" class="btn btn-primary" style="height:35px;">Copy</button></td>
+            <tr class="record">
+                <td><button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
+                        short-add={{instance.shortCode}}>Copy</button></td>
                 <td class="col-3">localhost:8000/{{instance.shortCode}}</td>
                 <td class="col-9" style="border-left-style: solid;">{{instance.longLink}}</td>
-                <td><a href="{%url 'delete_data' instance.id%}" type = "button" id = "delete" class="button nav-link delete" style="height:35px; opacity: 100%;">Delete</a></td>
+                <td><a href="{%url 'delete_data' instance.id%}" type="button" id="delete" class="delete btn btn-danger"
+                        style="height:35px; opacity: 100%;">Delete</a></td>
             </tr>
             {%endfor %}
         </tbody>
@@ -51,31 +39,55 @@
 </div>
 
 <script>
-    $(".delete").on("click", function(e){
+    const copyBtn = [...document.getElementsByName('copy')]
+
+    $(".delete").on("click", function (e) {
         e.preventDefault();
         var $this = $(this);
-        if (confirm("Are you Fucking Sure?")){
+        if (confirm("Are you Sure?")) {
             $.ajax({
                 url: $this.attr("href"),
                 type: "GET",
                 dataType: "json",
-                success: function(resp){
-                    if (resp.message === 'success'){
-                        $this.parents('.record').fadeOut("slow", function(){
+                success: function (resp) {
+                    if (resp.message === 'success') {
+                        $this.parents('.record').fadeOut("slow", function () {
                             $this.parents('.record').remove();
                         });
                     }
-                    else{
+                    else {
                         alert(resp.message);
                     }
                 },
-                error: function(resp){
+                error: function (resp) {
                     console.log("something is wrong");
                 }
             });
         }
         return false;
     })
+
+    copyBtn.forEach(btn => btn.addEventListener('click', () => {
+        const addShort = btn.getAttribute('short-add')
+        navigator.clipboard.writeText('localhost:8000/'+addShort)
+
+    }))
+
+    $("#search").on("click", function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: '/manage/search',
+            data: {
+                keyword: $('#searchfield').val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (resp){
+                $(".table").html(resp);
+            }
+        });
+    });
 </script>
 
 {%endblock%}
