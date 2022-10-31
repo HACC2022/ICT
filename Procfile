@@ -1,0 +1,1 @@
+web gunicorn icturl.wsgi:application --log-file -
