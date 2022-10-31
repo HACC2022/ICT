@@ -10,3 +10,4 @@ django = "*"
 
 [requires]
 python_version = "3.11"
+gunicorn= "20.1.0"
