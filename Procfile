@@ -1,1 +1,1 @@
-web: gunicorn etsUrlCompressor.wsgi.application
+web: gunicorn etsUrlCompressor.wsgi
