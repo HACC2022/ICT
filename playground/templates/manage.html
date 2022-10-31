@@ -17,20 +17,20 @@
     <table class="table">
         <thead>
             <tr>
-                <th class="col col-lg-1"></th>
-                <th class="col col-lg-2">Short URL</th>
-                <th class="col col-lg-8" style="border-left-style: solid;">Long URL</th>
-                <th class="col col-lg-1"></th>
+                <th class="col-1"></th>
+                <th class="col-2">Short URL</th>
+                <th class="col-8" style="border-left-style: solid;">Long URL</th>
+                <th class="col-1"></th>
             </tr>
         </thead>
         <tbody>
             {%for instance in object_list %}
             <tr class="record">
-                <td class="col col-lg-1"><button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
+                <td class="col-1"><button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
                         short-add={{instance.shortCode}}>Copy</button></td>
-                <td class="col col-lg-2">localhost:8000/{{instance.shortCode}}</td>
-                <td class="col col-lg-8" style="border-left-style: solid;">{{instance.longLink}}</td>
-                <td class="col col-lg-1"><a href="{%url 'delete_data' instance.id%}" type="button" id="delete" class="delete btn btn-danger"
+                <td class="col-2">localhost:8000/{{instance.shortCode}}</td>
+                <td class="col-8" style="border-left-style: solid;">{{instance.longLink}}</td>
+                <td class="col-1"><a href="{%url 'delete_data' instance.id%}" id="delete" class=" delete btn btn-danger"
                         style="height:35px; opacity: 100%;">Delete</a></td>
             </tr>
             {%endfor %}
