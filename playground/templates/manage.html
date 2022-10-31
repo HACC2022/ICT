@@ -2,35 +2,35 @@
 
 {%block content %}
 
-<div class="row" style="padding-left: 30px; padding-top: 30px;">
-    <div class="col">
-        {% csrf_token %}
-        <input type="search-field" class="form-control" name="searchfield" id="searchfield" placeholder="Type here to Search">
-    </div>
-    <div class="col">
-        <button type="button" class="btn btn-primary" id="search" name="search">Search</button>
-        <button type="button" class="btn btn-primary" id="reset" name="reset" onClick="window.location.reload();">reset Search</button>
+<div class="input-group container" style="padding-left: 0px; padding-top: 30px; display: flex;">
+    {% csrf_token %}
+    <input type="search-field" class="form-control" name="searchfield" id="searchfield"
+        placeholder="Type here to Search">
+    <div class = "input-group-append">
+        <button type="button" class="btn btn-secondary" id="search" name="search">Search</button>
+        <button type="button" class="btn btn-secondary" id="reset" name="reset"
+            onClick="window.location.reload();">Reset Search</button>
     </div>
 </div>
 
-<div class="table-responsive" style="padding: 30px;">
+<div class="" style="padding: 30px;">
     <table class="table">
         <thead>
             <tr>
-                <th></th>
-                <th class="col-3">Short URL</th>
-                <th class="col-9" style="border-left-style: solid;">Long URL</th>
-                <th></th>
+                <th class="col col-lg-1"></th>
+                <th class="col col-lg-2">Short URL</th>
+                <th class="col col-lg-8" style="border-left-style: solid;">Long URL</th>
+                <th class="col col-lg-1"></th>
             </tr>
         </thead>
         <tbody>
             {%for instance in object_list %}
             <tr class="record">
-                <td><button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
+                <td class="col col-lg-1"><button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
                         short-add={{instance.shortCode}}>Copy</button></td>
-                <td class="col-3">localhost:8000/{{instance.shortCode}}</td>
-                <td class="col-9" style="border-left-style: solid;">{{instance.longLink}}</td>
-                <td><a href="{%url 'delete_data' instance.id%}" type="button" id="delete" class="delete btn btn-danger"
+                <td class="col col-lg-2">localhost:8000/{{instance.shortCode}}</td>
+                <td class="col col-lg-8" style="border-left-style: solid;">{{instance.longLink}}</td>
+                <td class="col col-lg-1"><a href="{%url 'delete_data' instance.id%}" type="button" id="delete" class="delete btn btn-danger"
                         style="height:35px; opacity: 100%;">Delete</a></td>
             </tr>
             {%endfor %}
@@ -69,7 +69,7 @@
 
     copyBtn.forEach(btn => btn.addEventListener('click', () => {
         const addShort = btn.getAttribute('short-add')
-        navigator.clipboard.writeText('localhost:8000/'+addShort)
+        navigator.clipboard.writeText('localhost:8000/' + addShort)
 
     }))
 
@@ -83,7 +83,7 @@
                 keyword: $('#searchfield').val(),
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
             },
-            success: function (resp){
+            success: function (resp) {
                 $(".table").html(resp);
             }
         });
