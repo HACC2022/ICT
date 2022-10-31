@@ -1,1 +1,1 @@
-web gunicorn icturl.wsgi:application --log-file -
+web gunicorn etsUrlCompressor.wsgi.application --log-file -
