@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url= 'login')
 def hello(request):
     return render (request, 'index.html', {'name': 'zeek'})
-
+@login_required(login_url= 'login')
 def shorten(request):
     if request.method == 'POST':
         lURL = request.POST['link']
@@ -24,18 +24,18 @@ def shorten(request):
         shortUrl = Url(longLink=lURL,shortCode=sCode)
         shortUrl.save()
         return HttpResponse(sCode)
-
+@login_required(login_url= 'login')
 def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
     return redirect(long_url.longLink)
-
+@login_required(login_url= 'login')
 def manage_view(request):
     queryset = Url.objects.all()
     context = {
         'object_list': queryset
     }
     return render (request, 'manage.html', context)
-
+@login_required(login_url= 'login')
 def search_view(request):
     if request.method == 'POST':
         word = request.POST['keyword']
@@ -48,7 +48,7 @@ def search_view(request):
         
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
+@login_required(login_url= 'login')
 def manage_view_delete(request, pk, *args, **kwargs):
     if is_ajax(request):
         obj = Url.objects.get(pk=pk)
@@ -73,7 +73,7 @@ def loginPage(request):
     context={}
     return render (request, 'login.html', context)
 
-
+@login_required(login_url= 'login')
 def logoutUser(request):
     logout(request)
     return redirect('login')
