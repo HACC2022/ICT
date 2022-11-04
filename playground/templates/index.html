@@ -5,9 +5,10 @@
 <style>
     .submitBtnStyle {
         background-color: #237d68;
-        color: aliceblue;  
+        color: aliceblue;
     }
-    .submitBtnStyle:hover{
+
+    .submitBtnStyle:hover {
         background-color: #175144;
         transition: .3s;
     }
@@ -24,33 +25,41 @@
         </div>
         <div class="form-group box-spcae">
             <label for="urlOutput">Shortened URL</label>
-            <h4></h4>
+            <h4 id="short-url-display"></h4>
 
         </div>
 
 </div>
 <div class="form-group box-spcae container">
     <button type="submit" class="btn submitBtnStyle" id="submit-btn-function">Submit</button>
-    <button class="btn submitBtnStyle">Copy</button>
+    <button name="copy" class="btn submitBtnStyle copy-btn" id="copy-btn">Copy</button>
 </div>
 </form>
 
-<script type="text/javascript">
-    $(document).on('submit', '#url-form', function (e) {
-        e.preventDefault();
+<script>
+    $('#url-form').ready(function () {
+        $('#submit-btn-function').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '/shorten',
+                data: {
+                    link: $('#longLink').val(),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function (data) {
+                    $('h4').html("https://etsurl.com/" + data)
+                }
+            });
+        })
 
-        $.ajax({
-            type: 'POST',
-            url: '/shorten',
-            data: {
-                link: $('#longLink').val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-            },
-            success: function (data) {
-                $('h4').html("https://etsurl.com/" + data)
-            }
-        });
-    });
+
+        $('#copy-btn').click(function(e){
+            e.preventDefault();
+            var text = document.getElementById('short-url-display').innerHTML;
+            navigator.clipboard.writeText(text);
+        })
+    })
 </script>
 
 {%endblock%}
