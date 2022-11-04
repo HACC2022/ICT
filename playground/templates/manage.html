@@ -1,14 +1,34 @@
 {%extends "base.html"%}
 
 {%block content %}
+<style>
+    .searchStyle{
+        color: #fff;
+        background-color: #237d68;
+        border-color: #237d68;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border: 1px solid transparent;
+    }
+    .searchStyle:hover{
+        cursor: pointer;
+        background-color: #1c6856;
+        transition: .3s;
+    }
+    .table-header{
+        color:#77b9a9;
+        background-color: rgb(49, 49, 49);
+    }
+</style>
+
 
 <div class="input-group container" style="padding-left: 0px; padding-top: 30px; display: flex;">
     {% csrf_token %}
     <input type="search-field" class="form-control" name="searchfield" id="searchfield"
         placeholder="Type here to Search">
     <div class = "input-group-append">
-        <button type="button" class="btn btn-secondary" id="search" name="search">Search</button>
-        <button type="button" class="btn btn-secondary" id="reset" name="reset"
+        <button type="button" class="btn searchStyle" id="search" name="search">Search</button>
+        <button type="button" class="btn searchStyle" id="reset" name="reset"
             onClick="window.location.reload();">Reset Search</button>
     </div>
 </div>
@@ -16,10 +36,10 @@
 <div class="" style="padding: 30px;">
     <table class="table">
         <thead>
-            <tr>
+            <tr class="table-header">
                 <th class="col-1"></th>
                 <th class="col-2">Short URL</th>
-                <th class="col-8" style="border-left-style: solid;">Long URL</th>
+                <th class="col-8" style="border-left-style: solid;border-left-color: rgba(121, 121, 121, 0.686)">Long URL</th>
                 <th class="col-1"></th>
             </tr>
         </thead>
@@ -29,7 +49,7 @@
                 <td class="col-1"><button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
                         short-add={{instance.shortCode}}>Copy</button></td>
                 <td class="col-2">https://etsurl.com/{{instance.shortCode}}</td>
-                <td class="col-8" style="border-left-style: solid;">{{instance.longLink}}</td>
+                <td class="col-8" style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);">{{instance.longLink}}</td>
                 <td class="col-1"><a href="{%url 'delete_data' instance.id%}" id="delete" class=" delete btn btn-danger"
                         style="height:35px; opacity: 100%;">Delete</a></td>
             </tr>

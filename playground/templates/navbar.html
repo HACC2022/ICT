@@ -2,22 +2,19 @@
 
 <style>
   .nav-link{
-    opacity: 80%;
-  }
-  .nav-link:hover{
-    background-color:rgb(31, 31, 31);
-    border-radius: 10%;
     opacity: 100%;
   }
-  .nav-link:active{
-    background-color: black;
-    transform: 3px;
+  .nav-link:hover{
+    background-color:rgb(28, 90, 71);
+    color: cornsilk;
+    border-radius: 10%;
+    opacity: 80%;
   }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #237d68;">
     <a class="navbar-brand" href="index.html"></a>
-    <img src="{% static '/logo.png' %}" width="500" height="70" class="d-inline-block align-top" alt="banner" style="padding-right: 30px;"> 
+    <img src="{% static '/logo.png' %}" width="510" height="80" class="d-inline-block align-top" alt="banner" style="padding-right: 30px;"> 
     </a>
 
     
@@ -28,17 +25,17 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a style ="text-align: center; color: aliceblue;" class="navbar-brand nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+          <a style ="text-align: center; color: white;" class="navbar-brand nav-link" href="/">Home<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item active">
-          <a style ="text-align: center; color: aliceblue;" class="nav-link navbar-brand" href="/manage/">URL Links<span class="sr-only">(current)</span></a>
+          <a style ="text-align: center; color: white;" class="nav-link navbar-brand" href="/manage/">URL Links<span class="sr-only">(current)</span></a>
           </li>
 
           <li class="nav-item active">
-            <a style ="text-align: center; color: aliceblue;" class="nav-link navbar-brand" href="{% url 'logoutUser' %}">Logout<span class="sr-only">(current)</span></a>
+            <a style ="text-align: center; color: white;" class="nav-link navbar-brand" href="{% url 'logoutUser' %}">Logout<span class="sr-only">(current)</span></a>
           </li>
       </ul>
 
-        <span id="hellomsg">Hello, {{request.user}}</span> 
+        <span id="hellomsg"> <h5 style="color:white">Aloha, @{{request.user}}</h5></span> 
     </div>
   </nav>

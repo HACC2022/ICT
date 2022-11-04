@@ -2,24 +2,38 @@
 
 {%block content %}
 
-<div class="container box-spcae url-box">
+<style>
+    .submitBtnStyle {
+        background-color: #237d68;
+        color: aliceblue;  
+    }
+    .submitBtnStyle:hover{
+        background-color: #175144;
+        transition: .3s;
+    }
+</style>
+
+<div class="container box-spcae url-box" style="border: 1px solid #237d68;">
     <h1>Hawaii URL Shortener</h1>
     <form id="url-form">
         {% csrf_token %}
         <div class="form-group box-spcae">
-        <label id="urlLabel"for="url">Enter URL</label>
-        <input type="url" class="form-control" id="longLink" name = "longLink" aria-describedby="inputUrl" placeholder="Enter URL">
+            <label id="urlLabel" for="url">Enter URL</label>
+            <input type="url" class="form-control" id="longLink" name="longLink" aria-describedby="inputUrl"
+                placeholder="Enter URL">
         </div>
         <div class="form-group box-spcae">
             <label for="urlOutput">Shortened URL</label>
             <h4></h4>
-            <input type="text" readonly class="form-control-plaintext" id="urlOutput" rows="3" >
+
         </div>
-        <div class="form-group box-spcae">
-            <button type="submit" class="btn btn-primary" style="height:35px ;">Submit</button>
-        </div>
-    </form>
+
 </div>
+<div class="form-group box-spcae container">
+    <button type="submit" class="btn submitBtnStyle" id="submit-btn-function">Submit</button>
+    <button class="btn submitBtnStyle">Copy</button>
+</div>
+</form>
 
 <script type="text/javascript">
     $(document).on('submit', '#url-form', function (e) {
@@ -33,7 +47,7 @@
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
             },
             success: function (data) {
-                $('h4').html("35.173.233.133:8000/" + data)
+                $('h4').html("https://etsurl.com/" + data)
             }
         });
     });
