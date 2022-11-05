@@ -5,7 +5,7 @@ import uuid
 import pkg_resources
 from django.template.loader import render_to_string
 
-from .models import Url
+from .models import Url, IP_Adresses
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -27,6 +27,11 @@ def shorten(request):
 @login_required(login_url= 'login')
 def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
+    long_url.clicks += 1
+    long_url.save()
+    ip = get_client_ip(request)
+    ip_origin = IP_Adresses(shortCode=long_url, ip_address=ip)
+    ip_origin.save()
     return redirect(long_url.longLink)
 @login_required(login_url= 'login')
 def manage_view(request):
@@ -77,3 +82,11 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
