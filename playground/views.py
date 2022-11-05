@@ -43,8 +43,11 @@ def forward(request, pk):
 @login_required(login_url='login')
 def manage_view(request):
     queryset = Url.objects.all()
+    ipset = IP_Adresses.objects.all()
+    print(ipset)
     context = {
-        'object_list': queryset
+        'object_list': queryset,
+        'ipset_list': ipset,
     }
     return render(request, 'manage.html', context)
 
