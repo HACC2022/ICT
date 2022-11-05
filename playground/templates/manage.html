@@ -43,7 +43,7 @@
                 <th class="col-1"></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-body">
             {%for instance in object_list %}
             <tr class="record">
                 <td class="col-1"><button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
@@ -104,7 +104,7 @@
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
             },
             success: function (resp) {
-                $(".table").html(resp);
+                $(".table-body").html(resp);
             }
         });
     });
