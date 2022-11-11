@@ -22,29 +22,36 @@
         background-color: rgb(49, 49, 49);
     }
 
-    /* .btn-check-url{
+    .more-btn {
         color: #1c6856;
         border-radius: 5px;
         border: solid 1.5px #1c6856;
         background-color: transparent;
         transition: .5s;
     }
-    .btn-check-url:hover{
+
+    .more-btn:hover {
         color: white;
         border-radius: 5px;
         border: solid 1.5px white;
         background-color: #1c6856;
         transition: .5s;
-    } */
+    }
 
     .ip-display {
         background-color: white;
+        display: none;
     }
 
-    .ip-display td {
+    .ip-display {
         border: transparent;
         text-align: center;
         padding-bottom: 30px;
+        text-size-adjust: 20;
+    }
+
+    .table-style{
+        color: #1c6856;
     }
 </style>
 
@@ -64,41 +71,59 @@
     <!-- <button class="btn btn-check-url">Check URLs</button> -->
     <table class="table">
         <thead>
-            <tr class="table-header" style="text-align: center;">
-                <th class="col-1"></th>
-                <th class="col-1">Creation Date</th>
-                <th class="col-1">Visited</th>
-                <th class="col-2">Short URL</th>
-                <th class="col-6" style="border-left-style: solid;border-left-color: rgba(121, 121, 121, 0.686)">Long
+            <tr class="table-header">
+                <th class="">Creation Date</th>
+                <th class="">Visited</th>
+                <th>Status</th>
+                <th class="short-url-head">Short URL</th>
+                <th class="long-url-head"
+                    style="border-left-style: solid;border-left-color: rgba(121, 121, 121, 0.686)">Long
                     URL</th>
-                <th class="col-1"></th>
+                <th class="btn-head"></th>
             </tr>
         </thead>
         <tbody class="table-body">
             {%for instance in object_list %}
             <tr class="record">
-                <td class="col-1"><button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
-                        short-add={{instance.shortCode}}>Copy</button></td>
                 <td style="text-align: center;">{{instance.creationDate}}</td>
                 <td style="text-align: center;">{{instance.clicks}}</td>
-                <td class="col-2">https://etsurl.com/{{instance.shortCode}}</td>
-                <td class="col-8" style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);">
-                    {% if instance.longLink|length > 50%}
-                    {{instance.longLink|slice:"0:50"}}....................
+                <td>
+                    
+                    {%if instance.status == "Good"%}
+                    <span class="badge badge-success">{{instance.status}}</span>
+                    {%elif instance.status == "Bad"%}
+                    <span class="badge badge-danger">{{instance.status}}</span>
+                    {%else%}
+                    <span class="badge badge-warning">{{instance.status}}</span>
+                    {%endif%}
+                
+                </td>
+                <td class="">https://etsurl.com/{{instance.shortCode}}</td>
+                <td class="" style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);">
+                    {% if instance.longLink|length > 30%}
+                    {{instance.longLink|slice:"0:30"}}....................
                     {%else%}
                     {{instance.longLink}}
                     {%endif%}
                 </td>
-                <td class="col-1"><a href="{%url 'delete_data' instance.id%}" id="delete" class=" delete btn btn-danger"
-                        style="height:35px; opacity: 100%;">Delete</a></td>
+                <td class="">
+                    <a href="{%url 'delete_data' instance.id%}" id="delete" class=" delete btn btn-danger"
+                    style="height:35px; opacity: 100%;">Delete</a>
+                    <button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
+                    short-add={{instance.shortCode}}>Copy</button>
+                    <button name="show-ip" class="btn more-btn" more={{instance.id}}>More</button>
+                    <a href="{%url 'status_get' instance.id%}" class="btn more-btn check" name="check-btn">Check</a>
+                    <!-- <button class="btn more-btn" name="check-btn" long-url={{instance.longLink}}>Check</button> -->
+                </td>
             </tr>
-            <tr class="ip-display">
+            <tr class="ip-display" ip-row="{{instance.id}}" name="ip">
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td>
                     {%for i in ipset_list %}
-                    {%if i.id == instance.id  %}
+                    {%if i.shortCode == instance %}
                     <li>{{i.ip_address}}</li>
                     {%endif%}
                     {%endfor%}
@@ -115,6 +140,30 @@
 
 <script>
     const copyBtn = [...document.getElementsByName('copy')]
+    const showip = [...document.getElementsByName('show-ip')]
+    const rowip = [...document.getElementsByName('ip')]
+
+    var a = 0;
+    showip.forEach(btn => btn.addEventListener('click', () => {
+        const addShort = btn.getAttribute('short-add')
+        const e = btn.getAttribute('more')
+        var r = [...document.getElementsByName('ip')]
+        for (var i = 0; i < r.length; i++) {
+            if (r[i].getAttribute('ip-row') == e) {
+                if (a == 0) {
+                    r[i].style.display = "inline";
+                    a = 1;
+                }
+                else {
+                    r[i].style.display = "none"
+                    a = 0;
+                }
+            }
+            else {
+                r[i].style.display = "none";
+            }
+        }
+    }))
 
     $(".delete").on("click", function (e) {
         e.preventDefault();
@@ -142,10 +191,11 @@
         return false;
     })
 
+
     copyBtn.forEach(btn => btn.addEventListener('click', () => {
         const addShort = btn.getAttribute('short-add')
         navigator.clipboard.writeText('https://etsurl.com/' + addShort)
-
+        console.log(addShort)
     }))
 
     $("#search").on("click", function (e) {
@@ -166,3 +216,5 @@
 </script>
 
 {%endblock%}
+
+

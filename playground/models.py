@@ -7,6 +7,7 @@ class Url(models.Model):
     shortCode = models.CharField(max_length=30)
     creationDate = models.DateField(default=date.today)
     clicks = models.IntegerField(default=0)
+    status = models.CharField(max_length=10, default="Pending")
 
 class IP_Adresses(models.Model):
     shortCode = models.ForeignKey(Url, on_delete=models.CASCADE)

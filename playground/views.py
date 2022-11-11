@@ -1,13 +1,13 @@
-import re
-import requests
+from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 import uuid
+import requests
 
 import pkg_resources
 from django.template.loader import render_to_string
 
 from .models import Url, IP_Adresses
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -107,3 +107,18 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+@login_required(login_url='login')
+def get_status(request, pk):
+    longUrl = Url.objects.get(pk=pk)
+    s = longUrl.status
+    r = requests.head(longUrl.longLink)
+    status_code = r.status_code
+    if (status_code == 200):
+        longUrl.status = "Good"
+        longUrl.save()
+        return HttpResponseRedirect(reverse('manage'))
+    else:
+        longUrl.status = "Bad"
+        longUrl.save()
+        return HttpResponseRedirect(reverse('manage'))
