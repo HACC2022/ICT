@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 import uuid
@@ -29,8 +30,7 @@ def shorten(request):
         sCode = str(uuid.uuid4())[:5]
         shortUrl = Url(longLink=lURL, shortCode=sCode)
         shortUrl.save()
-        return HttpResponse("https://etsurl.com/" + sCode)
-
+        return HttpResponse(settings.HOSTNAME + "/" + sCode)
 
 def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
@@ -50,6 +50,7 @@ def manage_view(request):
     context = {
         'object_list': queryset,
         'ipset_list': ipset,
+        'hostname': settings.HOSTNAME
     }
     return render(request, 'manage.html', context)
 

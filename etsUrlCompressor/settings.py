@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+import socket
 from pathlib import Path
 
 from django.contrib.messages import constants as messages
@@ -29,6 +30,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+try:
+    HOSTNAME = socket.gethostbyname()
+except:
+    HOSTNAME = '127.0.0.1:8000'
 
 # Application definition
 
