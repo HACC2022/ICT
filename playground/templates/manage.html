@@ -45,7 +45,6 @@
 
     .ip-display {
         border: transparent;
-        text-align: center;
         padding-bottom: 30px;
         text-size-adjust: 20;
     }
@@ -121,6 +120,9 @@
                 <td></td>
                 <td></td>
                 <td>
+                    {%if instance.clicks == 0%}
+                    <li>404 - IP ADDRESS NOT FOUND</li>
+                    {%endif%}
                     {%for i in ipset_list %}
                     {%if i.shortCode == instance %}
                     <li>{{i.ip_address}}</li>

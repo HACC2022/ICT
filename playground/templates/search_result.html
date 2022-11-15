@@ -51,6 +51,9 @@
                 <td></td>
                 <td></td>
                 <td>
+                    {%if instance.clicks == 0%}
+                    <li>404 - IP ADDRESS NOT FOUND</li>
+                    {%endif%}
                     {%for i in ipset_list %}
                     {%if i.shortCode == instance %}
                     <li>{{i.ip_address}}</li>
