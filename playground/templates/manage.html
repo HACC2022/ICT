@@ -40,7 +40,7 @@
 
     .ip-display {
         background-color: white;
-        display: none;
+        visibility:collapse;
     }
 
     .ip-display {
@@ -69,7 +69,7 @@
 
 <div class="" style="padding: 30px;">
     <!-- <button class="btn btn-check-url">Check URLs</button> -->
-    <table class="table">
+    <table class="table table-body">
         <thead>
             <tr class="table-header">
                 <th class="">Creation Date</th>
@@ -87,7 +87,7 @@
             <tr class="record">
                 <td style="text-align: center;">{{instance.creationDate}}</td>
                 <td style="text-align: center;">{{instance.clicks}}</td>
-                <td>
+                <td style="text-align: center;">
                     
                     {%if instance.status == "Good"%}
                     <span class="badge badge-success">{{instance.status}}</span>
@@ -120,7 +120,6 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
                 <td>
                     {%for i in ipset_list %}
                     {%if i.shortCode == instance %}
@@ -130,8 +129,6 @@
                 </td>
                 <td></td>
                 <td></td>
-
-
             </tr>
             {%endfor %}
         </tbody>
@@ -151,16 +148,16 @@
         for (var i = 0; i < r.length; i++) {
             if (r[i].getAttribute('ip-row') == e) {
                 if (a == 0) {
-                    r[i].style.display = "inline";
+                    r[i].style.visibility = "visible"
                     a = 1;
                 }
                 else {
-                    r[i].style.display = "none"
+                    r[i].style.visibility = "collapse"
                     a = 0;
                 }
             }
             else {
-                r[i].style.display = "none";
+                r[i].style.visibility = "collapse"
             }
         }
     }))

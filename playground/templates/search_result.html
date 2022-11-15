@@ -1,11 +1,23 @@
 
-    <table class="table">
+    <table class="table table-body">
+        <thead>
+            <tr class="table-header">
+                <th class="">Creation Date</th>
+                <th class="">Visited</th>
+                <th>Status</th>
+                <th class="short-url-head">Short URL</th>
+                <th class="long-url-head"
+                    style="border-left-style: solid;border-left-color: rgba(121, 121, 121, 0.686)">Long
+                    URL</th>
+                <th class="btn-head"></th>
+            </tr>
+        </thead>
         <tbody class="table-body">
             {%for instance in object_list %}
             <tr class="record">
                 <td style="text-align: center;">{{instance.creationDate}}</td>
                 <td style="text-align: center;">{{instance.clicks}}</td>
-                <td>
+                <td style="text-align: center;">
                     
                     {%if instance.status == "Good"%}
                     <span class="badge badge-success">{{instance.status}}</span>
@@ -38,7 +50,6 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
                 <td>
                     {%for i in ipset_list %}
                     {%if i.shortCode == instance %}
@@ -48,8 +59,6 @@
                 </td>
                 <td></td>
                 <td></td>
-
-
             </tr>
             {%endfor %}
         </tbody>
