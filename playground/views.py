@@ -24,10 +24,12 @@ def hello(request):
 def shorten(request):
     if request.method == 'POST':
         lURL = request.POST['link']
+        if ".gov" not in lURL:
+            return HttpResponse("error")
         sCode = str(uuid.uuid4())[:5]
         shortUrl = Url(longLink=lURL, shortCode=sCode)
         shortUrl.save()
-        return HttpResponse(sCode)
+        return HttpResponse("https://etsurl.com/" + sCode)
 
 
 def forward(request, pk):

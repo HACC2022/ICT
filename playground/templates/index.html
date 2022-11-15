@@ -43,7 +43,8 @@
             </div>
         </div>
 
-</div>
+    </form>
+    </div>
 </form>
 
 <script>
@@ -51,7 +52,6 @@
         $('#submit-btn-function').click(function (e) {
             e.preventDefault();
             var s = document.getElementById("short-box")
-            s.style.display = "inline"
             $.ajax({
                 type: 'POST',
                 url: '/shorten',
@@ -60,7 +60,14 @@
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
                 },
                 success: function (data) {
-                    $('h4').html("https://etsurl.com/" + data)
+                    if (data != "error"){
+                        $('h4').html(data)
+                        s.style.display = "inline"
+                    }else{
+                        alert("Please provide a link containing the .gov domain!");
+                        s.style.display = "none"
+                        $('h4').html("")
+                    }
                 }
             });
         })
