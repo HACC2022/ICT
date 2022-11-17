@@ -16,9 +16,13 @@
     #short-box {
         display: none;
     }
+
+    #verification{
+        display: none;
+    }
 </style>
 
-<div class="container box-spcae url-box" style="border: 1px solid #237d68; height: 300px;">
+<div class="container box-spcae url-box" style="border: 1px solid #237d68; height: auto;">
     <h1>Hawaii URL Shortener</h1>
     <form id="url-form">
         {% csrf_token %}
@@ -28,13 +32,17 @@
             <div class="input-group">
                 <input type="url" class="form-control" id="longLink" name="longLink" aria-describedby="inputUrl"
                     placeholder="Enter URL">
-
                 <div class="input-group-append">
                     <button type="submit" class="btn submitBtnStyle" id="submit-btn-function">Submit</button>
                 </div>
-            </div>
-
         </div>
+            <br>
+                <input type="checkbox" id="veri" name="veri" onclick="showVerification()">
+                <label for="veri">Require verification</label><br>
+                <div id="verification">
+                    <label for="veripass">Password:</label>
+                    <input type="password" id="veripass" name="veripass"><br><br>
+                </div>
         <div class="form-group box-spcae">
             <label for="urlOutput">Shortened URL</label>
             <h4 id="short-url-display"></h4>
@@ -42,12 +50,25 @@
                 <button name="copy" class="btn submitBtnStyle copy-btn" id="copy-btn">Copy</button>
             </div>
         </div>
-
+        </div>
     </form>
     </div>
 </form>
 
 <script>
+    var checkBox = document.getElementById("veri");
+    var text = document.getElementById("verification");
+    var textbox = document.getElementById("veripass");
+
+    function showVerification() {
+      if (checkBox.checked == true){
+        text.style.display = "block";
+      } else {
+        text.style.display = "none";
+        textbox.value = "";
+      }
+    }
+
     $('#url-form').ready(function () {
         $('#submit-btn-function').click(function (e) {
             e.preventDefault();
@@ -57,15 +78,22 @@
                 url: '/shorten',
                 data: {
                     link: $('#longLink').val(),
+                    pass: $('#veripass').val(),
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
                 },
                 success: function (data) {
                     if (data != "error"){
                         $('h4').html(data)
                         s.style.display = "inline"
+                        text.style.display = "none"
+                        checkBox.checked = false;
+                        textbox.value = "";
                     }else{
                         alert("Please provide a link containing the .gov domain!");
                         s.style.display = "none"
+                        text.style.display = "none"
+                        checkBox.checked = false;
+                        textbox.value = "";
                         $('h4').html("")
                     }
                 }
