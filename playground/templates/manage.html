@@ -97,7 +97,7 @@
                     {%endif%}
                 
                 </td>
-                <td class="">https://etsurl.com/{{instance.shortCode}}</td>
+                <td class="">{{ hostname }}/{{instance.shortCode}}</td>
                 <td class="" style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);">
                     {% if instance.longLink|length > 30%}
                     {{instance.longLink|slice:"0:30"}}....................
@@ -138,6 +138,8 @@
 </div>
 
 <script>
+    var myHostName = "{{hostname}}";
+
     const copyBtn = [...document.getElementsByName('copy')]
     const showip = [...document.getElementsByName('show-ip')]
     const rowip = [...document.getElementsByName('ip')]
@@ -193,7 +195,7 @@
 
     copyBtn.forEach(btn => btn.addEventListener('click', () => {
         const addShort = btn.getAttribute('short-add')
-        navigator.clipboard.writeText('https://etsurl.com/' + addShort)
+        navigator.clipboard.writeText("http://" + myHostName + "/" + addShort)
         console.log(addShort)
     }))
 
