@@ -92,6 +92,8 @@
                     <span class="badge badge-success">{{instance.status}}</span>
                     {%elif instance.status == "Bad"%}
                     <span class="badge badge-danger">{{instance.status}}</span>
+                    {%elif instance.status == "No Server"%}
+                    <span class="badge badge-danger">{{instance.status}}</span>
                     {%else%}
                     <span class="badge badge-warning">{{instance.status}}</span>
                     {%endif%}
