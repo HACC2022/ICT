@@ -1,3 +1,4 @@
+from json import dumps
 from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -57,11 +58,19 @@ def forward(request, pk):
 def manage_view(request):
     queryset = Url.objects.all()
     ipset = IP_Adresses.objects.all()
-    print(ipset)
+    iplist = []
+    idlist = []
+    for x in ipset:
+        iplist.append(x.ip_address)
+        idlist.append(x.shortCode.pk)
+    dumpIPlist = dumps(iplist)
+    dumpIDlist = dumps(idlist)
     context = {
         'object_list': queryset,
         'ipset_list': ipset,
-        'hostname': settings.HOSTNAME
+        'hostname': settings.HOSTNAME,
+        'iplist': dumpIPlist,
+        'idlist': dumpIDlist,
     }
     return render(request, 'manage.html', context)
 
