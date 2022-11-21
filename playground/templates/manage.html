@@ -261,12 +261,13 @@
     })
 
     $('#reset').on('click', function (e){
-        var search_input = document.getElementById('searchfield').value
-        search_input.toLowerCase()
+        var search_input = document.getElementById('searchfield')
+        search_input.value = ""
         for(i =0; i <rowTable.length; i++){
             var longUrlList = rowLongLink[i].innerHTML.toLowerCase()
             rowTable[i].style.display = ""
         }
+        
     })
 
     //var a = 0;
@@ -389,12 +390,12 @@
         passStyle = document.getElementById('password-display')
         for (let i = 0; i<passwordID.length; i++){
             if (passwordID[i] == btnIpId){
-                $('#password-display').html("Hey Pussy, Password: " + passwordlist[i])
+                $('#password-display').html("Password: " + passwordlist[i])
                 passStyle.style = "color:black; text-align: center;"
                 break
             }
             else{
-                $('#password-display').html("There is no Password Pussy!!!")
+                $('#password-display').html("There is no Password")
                 passStyle.style = "color:red; text-align: center;"
             }
         }
