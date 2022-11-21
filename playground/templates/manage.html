@@ -103,10 +103,10 @@
 <div class="input-group container" style="padding-left: 0px; padding-top: 30px; display: flex;">
     {% csrf_token %}
     <input type="search-field" class="form-control" name="searchfield" id="searchfield"
-        placeholder="Type here to Search">
+        placeholder="Type here to Search" search-input>
     <div class="input-group-prepend">
-        <button type="button" class="btn searchStyle" id="search" name="search" style ="z-index: 0;">Search</button>
-        <button type="button" class="btn searchStyle" id="reset" name="reset" style ="z-index: 0;" onClick="window.location.reload();">Reset
+        <button type="button" class="btn searchStyle" id="search" name="search" style ="z-index: 0;" search-btn>Search</button>
+        <button type="button" class="btn searchStyle" id="reset" name="reset" style ="z-index: 0;">Reset
             Search</button>
     </div>
 </div>
@@ -159,7 +159,7 @@
         </thead>
         <tbody class="table-body">
             {%for instance in object_list %}
-            <tr class="record">
+            <tr class="record" name="record">
                 <td style="text-align: center;">{{instance.creationDate}}</td>
                 <td style="text-align: center;">{{instance.clicks}}</td>
                 <td style="text-align: center;">
@@ -177,6 +177,7 @@
                 </td>
                 <td class="">{{ hostname }}/{{instance.shortCode}}</td>
                 <td class="" style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);">
+                    <p class = "longlinkClass" style="display: none;">{{instance.longLink}}</p>
                     {% if instance.longLink|length > 30%}
                     {{instance.longLink|slice:"0:30"}}....................
                     {%else%}
@@ -235,6 +236,38 @@
     const copyBtn = [...document.getElementsByName('copy')]
     const showip = [...document.getElementsByName('show-ip')]
     const rowip = [...document.getElementsByName('ip')]
+    // const longlinkName = [...document.getAttribute('search-compare')]
+    // console.log(longlinkName)
+    const rowLongLink = [...document.getElementsByClassName('longlinkClass')]
+    var rowTable = [...document.getElementsByName('record')]
+    
+    //const search_btn = document.getElementById('search')
+    $('#search').on('click', function (e){
+        var search_input = document.getElementById('searchfield').value
+        search_input.toLowerCase()
+        for(i =0; i <rowTable.length; i++){
+            var longUrlList = rowLongLink[i].innerHTML.toLowerCase()
+            
+            if (!longUrlList.includes(search_input)){
+                rowTable[i].style.display = "none"
+            }
+            else if (search_input === ""){
+                rowTable[i].style.display = ""
+            }
+            else{
+                rowTable[i].style.display = ""
+            }
+        }
+    })
+
+    $('#reset').on('click', function (e){
+        var search_input = document.getElementById('searchfield').value
+        search_input.toLowerCase()
+        for(i =0; i <rowTable.length; i++){
+            var longUrlList = rowLongLink[i].innerHTML.toLowerCase()
+            rowTable[i].style.display = ""
+        }
+    })
 
     //var a = 0;
     // showip.forEach(btn => btn.addEventListener('click', () => {
@@ -291,21 +324,21 @@
         console.log(addShort)
     }))
 
-    $("#search").on("click", function (e) {
-        e.preventDefault();
+    // $("#search").on("click", function (e) {
+    //     e.preventDefault();
 
-        $.ajax({
-            type: 'POST',
-            url: '/manage/search',
-            data: {
-                keyword: $('#searchfield').val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-            },
-            success: function (resp) {
-                $(".table-body").html(resp);
-            }
-        });
-    });
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '/manage/search',
+    //         data: {
+    //             keyword: $('#searchfield').val(),
+    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+    //         },
+    //         success: function (resp) {
+    //             $(".table-body").html(resp);
+    //         }
+    //     });
+    // });
 
 
 
@@ -327,7 +360,6 @@
     var ipContainer = document.querySelector("[ip-container]")
     var passwordlist = JSON.parse("{{passwordlist|escapejs}}")
     var passwordID = JSON.parse("{{passwordIDlist|escapejs}}")
-    console.log(passwordID)
 
     for (let i = 0; i<objID.length; i++){
         const cloneNode  = ipTemplate.content.cloneNode(true).children[0]
