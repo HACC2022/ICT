@@ -116,10 +116,14 @@
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close">&times;</span>
+        <div>
+            <h4 style="text-align: center;" id = "password-display"></h4>
+        </div>
         <div id="myIPTable" style="width:100%;max-width:700px">
-            <table class="table table-striped">
+            <table class="table table-light table-bordered" style="padding-top: 20px;">
                 <thead>
                     <tr class="thead-light">
+                        <th>Date Visited</th>
                         <th>Object ID</th>
                         <th>IP Address</th>
                     </tr>
@@ -127,6 +131,7 @@
                 <tbody ip-container>
                     <template data-ip-template>
                         <tr class = "ip-tr" name="ip-row">
+                            <td class="visited-td" visited-content></td>
                             <td class="ip-td" id-content></td>
                             <td class="ip-td" ip-content></td>
                         </tr>
@@ -317,24 +322,28 @@
 
     var ip = JSON.parse("{{iplist|escapejs}}")
     var objID = JSON.parse("{{idlist|escapejs}}")
+    var visitedDate = JSON.parse("{{visitlist|escapejs}}")
     const ipTemplate = document.querySelector("[data-ip-template]")
     var ipContainer = document.querySelector("[ip-container]")
+    var passwordlist = JSON.parse("{{passwordlist|escapejs}}")
+    var passwordID = JSON.parse("{{passwordIDlist|escapejs}}")
+    console.log(passwordID)
 
     for (let i = 0; i<objID.length; i++){
         const cloneNode  = ipTemplate.content.cloneNode(true).children[0]
         const ipContent = cloneNode.querySelector('[ip-content]')
         const idContent = cloneNode.querySelector('[id-content]')
+        const visitedContent = cloneNode.querySelector('[visited-content]')
         idContent.textContent = objID[i]
         ipContent.textContent = ip[i]
+        visitedContent.textContent = visitedDate[i]
         ipContainer.append(cloneNode)
     }
 
     showip.forEach(btn => btn.addEventListener('click', () => {
         var btnIpId = btn.getAttribute("more")
-        console.log(btnIpId)
        
         var ipRow = [...document.getElementsByName('ip-row')]
-        console.log(ipRow)
     
         for(let i =0; i<objID.length;i++){
             if (objID[i] == btnIpId){
@@ -342,6 +351,19 @@
             }
             else{
                 ipRow[i].style.visibility = "collapse"
+            }
+        }
+
+        passStyle = document.getElementById('password-display')
+        for (let i = 0; i<passwordID.length; i++){
+            if (passwordID[i] == btnIpId){
+                $('#password-display').html("Hey Pussy, Password: " + passwordlist[i])
+                passStyle.style = "color:black; text-align: center;"
+                break
+            }
+            else{
+                $('#password-display').html("There is no Password Pussy!!!")
+                passStyle.style = "color:red; text-align: center;"
             }
         }
 

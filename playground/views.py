@@ -58,19 +58,40 @@ def forward(request, pk):
 def manage_view(request):
     queryset = Url.objects.all()
     ipset = IP_Adresses.objects.all()
+    verificationTable = Verification_Table.objects.all()
+
     iplist = []
     idlist = []
+    visitList = []
+    passwordList = []
+    passwordID = []
+
     for x in ipset:
         iplist.append(x.ip_address)
         idlist.append(x.shortCode.pk)
+        date = str(x.visitedDate.month) + "/" + str(x.visitedDate.day) + "/" + str(x.visitedDate.year)
+        visitList.append(date)
+
+    for y in verificationTable:
+        passwordList.append(y.password)
+        passwordID.append(y.shortCode.pk)
+
     dumpIPlist = dumps(iplist)
     dumpIDlist = dumps(idlist)
+    dumpVisitList = dumps(visitList)
+    dumpPasswordList = dumps(passwordList)
+    dumpPasswordID = dumps(passwordID)
+
     context = {
         'object_list': queryset,
         'ipset_list': ipset,
+        'verifiedlist': verificationTable,
         'hostname': settings.HOSTNAME,
         'iplist': dumpIPlist,
         'idlist': dumpIDlist,
+        'visitlist': dumpVisitList,
+        'passwordlist': dumpPasswordList,
+        'passwordIDlist': dumpPasswordID,
     }
     return render(request, 'manage.html', context)
 

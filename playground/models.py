@@ -13,6 +13,7 @@ class Url(models.Model):
 class IP_Adresses(models.Model):
     shortCode = models.ForeignKey(Url, on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField(default='192.168.0.1')
+    visitedDate = models.DateField(default=date.today)
 
 class Verification_Table(models.Model):
     shortCode = models.ForeignKey(Url, on_delete=models.CASCADE)
