@@ -1,11 +1,9 @@
 from json import dumps
-from django.conf import settings
 from django.urls import reverse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 import uuid
 import requests
 
-import pkg_resources
 from django.template.loader import render_to_string
 
 from .models import Url, IP_Adresses, Verification_Table
@@ -24,6 +22,7 @@ def hello(request):
 
 @login_required(login_url='login')
 def shorten(request):
+    host = request.META['HTTP_HOST']
     if request.method == 'POST':
         lURL = request.POST['link']
         pw = request.POST['pass']
@@ -37,7 +36,7 @@ def shorten(request):
             shortUrl.verification = True
             shortUrl.save()
             veriObj.save()
-        return HttpResponse(settings.HOSTNAME + "/" + sCode)
+        return HttpResponse(host + "/" + sCode)
 
 def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
@@ -56,6 +55,7 @@ def forward(request, pk):
 
 @login_required(login_url='login')
 def manage_view(request):
+    host = request.META['HTTP_HOST']
     queryset = Url.objects.all()
     ipset = IP_Adresses.objects.all()
     verificationTable = Verification_Table.objects.all()
@@ -186,3 +186,39 @@ def verification(request):
         return HttpResponse(linkObj.longLink)
     else:
         return HttpResponse("wrong")
+
+@login_required(login_url='login')
+def analytics(request):
+    labels = []
+    data = []
+
+    goodCount=0
+    badCount=0
+    pendingCount =0
+    barlabel=['Good', 'Pending', 'Bad']
+
+
+
+    queryset = Url.objects.all()
+    for chartData in queryset:
+        labels.append(chartData.longLink)
+        data.append(chartData.clicks)
+
+    
+        if chartData.status == 'Good':
+            goodCount+=1
+        elif chartData.status == 'Pending':
+            pendingCount+=1
+        else:
+            badCount+=1
+            
+
+    bardata = [goodCount,pendingCount,badCount]
+    
+    
+    return render(request, 'analytics.html', {
+        'labels': labels,
+        'data': data,
+        'barlabels': barlabel,
+        'bardata': bardata
+    })

@@ -11,5 +11,6 @@ urlpatterns = [
     path('logout/', views.logoutUser, name='logoutUser'),
     path('delete/<pk>/', views.manage_view_delete, name='delete_data'),
     path('status/<pk>/', views.get_status, name='status_get'),
-    path('verification/', views.verification, name='verification')
+    path('verification/', views.verification, name='verification'),
+    path('analytics/', views.analytics, name='analytics'),
 ]

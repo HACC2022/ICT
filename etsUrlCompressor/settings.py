@@ -30,11 +30,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-try:
-    HOSTNAME = socket.gethostbyname()
-except:
-    HOSTNAME = '127.0.0.1:8000'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -122,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Pacific/Honolulu'
 
 USE_I18N = True
 
