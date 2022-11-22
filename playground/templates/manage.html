@@ -38,6 +38,13 @@
         transition: .5s;
     }
 
+    .more-btn-disable{
+        color: #1c6856;
+        border-radius: 5px;
+        border: solid 1.5px #1c6856;
+        background-color: transparent;
+    }
+
     .ip-display {
         background-color: white;
         visibility:collapse;
@@ -52,6 +59,44 @@
     .table-style{
         color: #1c6856;
     }
+
+    /* ---------------------Pop up for the IP address -------------------------- */
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
 </style>
 
 
@@ -59,10 +104,36 @@
     {% csrf_token %}
     <input type="search-field" class="form-control" name="searchfield" id="searchfield"
         placeholder="Type here to Search">
-    <div class="input-group-append">
-        <button type="button" class="btn searchStyle" id="search" name="search">Search</button>
-        <button type="button" class="btn searchStyle" id="reset" name="reset" onClick="window.location.reload();">Reset
+    <div class="input-group-prepend">
+        <button type="button" class="btn searchStyle" id="search" name="search" style ="z-index: 0;">Search</button>
+        <button type="button" class="btn searchStyle" id="reset" name="reset" style ="z-index: 0;" onClick="window.location.reload();">Reset
             Search</button>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="myIPTable" style="width:100%;max-width:700px">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="thead-light">
+                        <th>Object ID</th>
+                        <th>IP Address</th>
+                    </tr>
+                </thead>
+                <tbody ip-container>
+                    <template data-ip-template>
+                        <tr class = "ip-tr" name="ip-row">
+                            <td class="ip-td" id-content></td>
+                            <td class="ip-td" ip-content></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -71,9 +142,9 @@
     <table class="table table-body">
         <thead>
             <tr class="table-header">
-                <th class="">Creation Date</th>
-                <th class="">Visited</th>
-                <th>Status</th>
+                <th style="text-align: center;">Creation Date</th>
+                <th style="text-align: center;">Visited</th>
+                <th style="text-align: center;">Status</th>
                 <th class="short-url-head">Short URL</th>
                 <th class="long-url-head"
                     style="border-left-style: solid;border-left-color: rgba(121, 121, 121, 0.686)">Long
@@ -92,12 +163,14 @@
                     <span class="badge badge-success">{{instance.status}}</span>
                     {%elif instance.status == "Bad"%}
                     <span class="badge badge-danger">{{instance.status}}</span>
+                    {%elif instance.status == "No Server"%}
+                    <span class="badge badge-danger">{{instance.status}}</span>
                     {%else%}
                     <span class="badge badge-warning">{{instance.status}}</span>
                     {%endif%}
                 
                 </td>
-                <td class="">https://etsurl.com/{{instance.shortCode}}</td>
+                <td class="">{{ hostname }}/{{instance.shortCode}}</td>
                 <td class="" style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);">
                     {% if instance.longLink|length > 30%}
                     {{instance.longLink|slice:"0:30"}}....................
@@ -108,9 +181,23 @@
                 <td class="">
                     <a href="{%url 'delete_data' instance.id%}" id="delete" class=" delete btn btn-danger"
                     style="height:35px; opacity: 100%;">Delete</a>
-                    <button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
-                    short-add={{instance.shortCode}}>Copy</button>
-                    <button name="show-ip" class="btn more-btn" more={{instance.id}}>More</button>
+
+                    {%if instance.status == "Good"%}
+                        <button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
+                        short-add={{instance.shortCode}}>Copy</button>
+                        <button name = "show-ip" id = "myBtn"  class="btn more-btn" more={{instance.id}}>More</button>
+                    {%elif instance.status == "Pending"%}
+                        <button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
+                        short-add={{instance.shortCode}}>Copy</button>
+                        <button name = "show-ip" id = "myBtn"  class="btn more-btn" more={{instance.id}}>More</button>
+                    {%else%}
+                        <button class="btn btn-primary copy-btn" style="height:35px;"
+                        disabled>Copy</button>
+                        <button class="btn more-btn-disable" disabled>More</button>
+                    {%endif%}
+
+
+                    
                     <a href="{%url 'status_get' instance.id%}" class="btn more-btn check" name="check-btn">Check</a>
                     <!-- <button class="btn more-btn" name="check-btn" long-url={{instance.longLink}}>Check</button> -->
                 </td>
@@ -138,31 +225,33 @@
 </div>
 
 <script>
+    var myHostName = "{{hostname}}";
+
     const copyBtn = [...document.getElementsByName('copy')]
     const showip = [...document.getElementsByName('show-ip')]
     const rowip = [...document.getElementsByName('ip')]
 
-    var a = 0;
-    showip.forEach(btn => btn.addEventListener('click', () => {
-        const addShort = btn.getAttribute('short-add')
-        const e = btn.getAttribute('more')
-        var r = [...document.getElementsByName('ip')]
-        for (var i = 0; i < r.length; i++) {
-            if (r[i].getAttribute('ip-row') == e) {
-                if (a == 0) {
-                    r[i].style.visibility = "visible"
-                    a = 1;
-                }
-                else {
-                    r[i].style.visibility = "collapse"
-                    a = 0;
-                }
-            }
-            else {
-                r[i].style.visibility = "collapse"
-            }
-        }
-    }))
+    //var a = 0;
+    // showip.forEach(btn => btn.addEventListener('click', () => {
+    //     const addShort = btn.getAttribute('short-add')
+    //     const e = btn.getAttribute('more')
+    //     var r = [...document.getElementsByName('ip')]
+    //     for (var i = 0; i < r.length; i++) {
+    //         if (r[i].getAttribute('ip-row') == e) {
+    //             if (a == 0) {
+    //                 r[i].style.visibility = "visible"
+    //                 a = 1;
+    //             }
+    //             else {
+    //                 r[i].style.visibility = "collapse"
+    //                 a = 0;
+    //             }
+    //         }
+    //         else {
+    //             r[i].style.visibility = "collapse"
+    //         }
+    //     }
+    // }))
 
     $(".delete").on("click", function (e) {
         e.preventDefault();
@@ -193,7 +282,7 @@
 
     copyBtn.forEach(btn => btn.addEventListener('click', () => {
         const addShort = btn.getAttribute('short-add')
-        navigator.clipboard.writeText('https://etsurl.com/' + addShort)
+        navigator.clipboard.writeText("http://" + myHostName + "/" + addShort)
         console.log(addShort)
     }))
 
@@ -212,6 +301,65 @@
             }
         });
     });
+
+
+
+    // --------------------------Pop up for the IP address--------------------------------
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btnID = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+
+    var ip = JSON.parse("{{iplist|escapejs}}")
+    var objID = JSON.parse("{{idlist|escapejs}}")
+    const ipTemplate = document.querySelector("[data-ip-template]")
+    var ipContainer = document.querySelector("[ip-container]")
+
+    for (let i = 0; i<objID.length; i++){
+        const cloneNode  = ipTemplate.content.cloneNode(true).children[0]
+        const ipContent = cloneNode.querySelector('[ip-content]')
+        const idContent = cloneNode.querySelector('[id-content]')
+        idContent.textContent = objID[i]
+        ipContent.textContent = ip[i]
+        ipContainer.append(cloneNode)
+    }
+
+    showip.forEach(btn => btn.addEventListener('click', () => {
+        var btnIpId = btn.getAttribute("more")
+        console.log(btnIpId)
+       
+        var ipRow = [...document.getElementsByName('ip-row')]
+        console.log(ipRow)
+    
+        for(let i =0; i<objID.length;i++){
+            if (objID[i] == btnIpId){
+                ipRow[i].style.visibility = "visible"
+            }
+            else{
+                ipRow[i].style.visibility = "collapse"
+            }
+        }
+
+        modal.style.display = "block";
+    }))
+
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>
 
 {%endblock%}
