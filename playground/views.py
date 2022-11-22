@@ -1,14 +1,11 @@
 from json import dumps
-from django.conf import settings
 from django.urls import reverse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 import uuid
 import requests
-from django.views.generic import TemplateView
-import pkg_resources
+
 from django.template.loader import render_to_string
 
-from playground.models import Url, IP_Adresses
 from .models import Url, IP_Adresses, Verification_Table
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
@@ -25,6 +22,7 @@ def hello(request):
 
 @login_required(login_url='login')
 def shorten(request):
+    host = request.META['HTTP_HOST']
     if request.method == 'POST':
         lURL = request.POST['link']
         pw = request.POST['pass']
@@ -38,7 +36,7 @@ def shorten(request):
             shortUrl.verification = True
             shortUrl.save()
             veriObj.save()
-        return HttpResponse(settings.HOSTNAME + "/" + sCode)
+        return HttpResponse(host + "/" + sCode)
 
 def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
@@ -57,6 +55,7 @@ def forward(request, pk):
 
 @login_required(login_url='login')
 def manage_view(request):
+    host = request.META['HTTP_HOST']
     queryset = Url.objects.all()
     ipset = IP_Adresses.objects.all()
     iplist = []
@@ -69,9 +68,9 @@ def manage_view(request):
     context = {
         'object_list': queryset,
         'ipset_list': ipset,
-        'hostname': settings.HOSTNAME,
+        'hostname': host,
         'iplist': dumpIPlist,
-        'idlist': dumpIDlist,
+        'idlist': dumpIDlist
     }
     return render(request, 'manage.html', context)
 
@@ -165,9 +164,7 @@ def verification(request):
         ip_origin.save()
         return HttpResponse(linkObj.longLink)
     else:
-        longUrl.status = "Bad"
-        longUrl.save()
-        return HttpResponseRedirect(reverse('manage'))
+        return HttpResponse("wrong")
 
 @login_required(login_url='login')
 def analytics(request):
@@ -204,7 +201,3 @@ def analytics(request):
         'barlabels': barlabel,
         'bardata': bardata
     })
-
-
-
-        # return HttpResponse("wrong")

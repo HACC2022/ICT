@@ -282,7 +282,7 @@
 
     copyBtn.forEach(btn => btn.addEventListener('click', () => {
         const addShort = btn.getAttribute('short-add')
-        navigator.clipboard.writeText("http://" + myHostName + "/" + addShort)
+        navigator.clipboard.writeText(myHostName + "/" + addShort)
         console.log(addShort)
     }))
 
