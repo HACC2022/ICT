@@ -2,11 +2,11 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 import uuid
 import requests
-
+from django.views.generic import TemplateView
 import pkg_resources
 from django.template.loader import render_to_string
 
-from .models import Url, IP_Adresses
+from playground.models import Url, IP_Adresses
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -124,3 +124,42 @@ def get_status(request, pk):
         longUrl.status = "Bad"
         longUrl.save()
         return HttpResponseRedirect(reverse('manage'))
+
+@login_required(login_url='login')
+def analytics(request):
+    labels = []
+    data = []
+
+    goodCount=0
+    badCount=0
+    pendingCount =0
+    barlabel=['Good', 'Pending', 'Bad']
+
+
+
+    queryset = Url.objects.all()
+    for chartData in queryset:
+        labels.append(chartData.longLink)
+        data.append(chartData.clicks)
+
+    
+        if chartData.status == 'Good':
+            goodCount+=1
+        elif chartData.status == 'Pending':
+            pendingCount+=1
+        else:
+            badCount+=1
+            
+
+    bardata = [goodCount,pendingCount,badCount]
+    
+    
+    return render(request, 'analytics.html', {
+        'labels': labels,
+        'data': data,
+        'barlabels': barlabel,
+        'bardata': bardata
+    })
+
+
+
