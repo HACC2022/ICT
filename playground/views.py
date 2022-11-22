@@ -1,4 +1,5 @@
 from json import dumps
+from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import render, redirect
 import uuid
@@ -86,7 +87,7 @@ def manage_view(request):
         'object_list': queryset,
         'ipset_list': ipset,
         'verifiedlist': verificationTable,
-        'hostname': settings.HOSTNAME,
+        'hostname': host,
         'iplist': dumpIPlist,
         'idlist': dumpIDlist,
         'visitlist': dumpVisitList,
