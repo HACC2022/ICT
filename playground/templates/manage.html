@@ -210,23 +210,6 @@
                     <!-- <button class="btn more-btn" name="check-btn" long-url={{instance.longLink}}>Check</button> -->
                 </td>
             </tr>
-            <tr class="ip-display" ip-row="{{instance.id}}" name="ip">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    {%if instance.clicks == 0%}
-                    <li>404 - IP ADDRESS NOT FOUND</li>
-                    {%endif%}
-                    {%for i in ipset_list %}
-                    {%if i.shortCode == instance %}
-                    <li>{{i.ip_address}}</li>
-                    {%endif%}
-                    {%endfor%}
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
             {%endfor %}
         </tbody>
     </table>
@@ -363,7 +346,8 @@
     var ipContainer = document.querySelector("[ip-container]")
     var passwordlist = JSON.parse("{{passwordlist|escapejs}}")
     var passwordID = JSON.parse("{{passwordIDlist|escapejs}}")
-    var location = JSON.parse("{{locationList|escapejs}}")
+    var locationList = JSON.parse("{{locationList|escapejs}}")
+    console.log(locationList)
 
     for (let i = 0; i<objID.length; i++){
         const cloneNode  = ipTemplate.content.cloneNode(true).children[0]
@@ -374,15 +358,13 @@
         idContent.textContent = objID[i]
         ipContent.textContent = ip[i]
         visitedContent.textContent = visitedDate[i]
-        locationContent.textContent = location[i]
+        locationContent.textContent = locationList[i]
         ipContainer.append(cloneNode)
     }
 
     showip.forEach(btn => btn.addEventListener('click', () => {
         var btnIpId = btn.getAttribute("more")
-       
         var ipRow = [...document.getElementsByName('ip-row')]
-    
         for(let i =0; i<objID.length;i++){
             if (objID[i] == btnIpId){
                 ipRow[i].style.visibility = "visible"

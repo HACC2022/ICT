@@ -50,8 +50,8 @@ def forward(request, pk):
         return render(request, 'redirect_verification.html', context)
     long_url.clicks += 1
     long_url.save()
-    # ip = get_client_ip(request)
-    ip = "204.210.114.78"
+    ip = get_client_ip(request)
+    # ip = "204.210.114.78"
     response = requests.get(f'https://ipapi.co/{ip}/json/').json()
     city = response.get('city')
     region = response.get('region')
@@ -85,7 +85,7 @@ def manage_view(request):
         date = str(x.visitedDate.month) + "/" + str(x.visitedDate.day) + "/" + str(x.visitedDate.year) + " " + \
                str(x.visitedDate.hour) + ":" + str(x.visitedDate.minute)
         visitList.append(date)
-        location = x.city + ", " + x.region + ", " + x.country
+        location = str(x.city) + ", " + str(x.region) + ", " + str(x.country)
         locationList.append(location)
 
     for y in verificationTable:
