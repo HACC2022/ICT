@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+
 # Create your views here.
 
 
@@ -39,6 +40,7 @@ def shorten(request):
             veriObj.save()
         return HttpResponse(host + "/" + sCode)
 
+
 def forward(request, pk):
     long_url = Url.objects.get(shortCode=pk)
     if long_url.verification is True:
@@ -48,8 +50,17 @@ def forward(request, pk):
         return render(request, 'redirect_verification.html', context)
     long_url.clicks += 1
     long_url.save()
-    ip = get_client_ip(request)
-    ip_origin = IP_Adresses(shortCode=long_url, ip_address=ip)
+    # ip = get_client_ip(request)
+    ip = "204.210.114.78"
+    response = requests.get(f'https://ipapi.co/{ip}/json/').json()
+    city = response.get('city')
+    region = response.get('region')
+    country = response.get('country')
+    longitude = response.get('longitude')
+    latitude = response.get('latitude')
+    ip_origin = IP_Adresses(shortCode=long_url, ip_address=ip, city=city, region=region, country=country,
+                            longitude=longitude,
+                            latitude=latitude)
     ip_origin.save()
     return redirect(long_url.longLink)
 
@@ -66,12 +77,16 @@ def manage_view(request):
     visitList = []
     passwordList = []
     passwordID = []
+    locationList = []
 
     for x in ipset:
         iplist.append(x.ip_address)
         idlist.append(x.shortCode.pk)
-        date = str(x.visitedDate.month) + "/" + str(x.visitedDate.day) + "/" + str(x.visitedDate.year)
+        date = str(x.visitedDate.month) + "/" + str(x.visitedDate.day) + "/" + str(x.visitedDate.year) + " " + \
+               str(x.visitedDate.hour) + ":" + str(x.visitedDate.minute)
         visitList.append(date)
+        location = x.city + ", " + x.region + ", " + x.country
+        locationList.append(location)
 
     for y in verificationTable:
         passwordList.append(y.password)
@@ -82,6 +97,7 @@ def manage_view(request):
     dumpVisitList = dumps(visitList)
     dumpPasswordList = dumps(passwordList)
     dumpPasswordID = dumps(passwordID)
+    dumpLocationList = dumps(locationList)
 
     context = {
         'object_list': queryset,
@@ -93,6 +109,7 @@ def manage_view(request):
         'visitlist': dumpVisitList,
         'passwordlist': dumpPasswordList,
         'passwordIDlist': dumpPasswordID,
+        'locationList': dumpLocationList,
     }
     return render(request, 'manage.html', context)
 
@@ -153,6 +170,7 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
 @login_required(login_url='login')
 def get_status(request, pk):
     try:
@@ -173,6 +191,7 @@ def get_status(request, pk):
         longUrl.save()
         return HttpResponseRedirect(reverse('manage'))
 
+
 def verification(request):
     pk = request.POST['shortcode']
     pw = request.POST['password']
@@ -181,42 +200,46 @@ def verification(request):
     if pw == veriPw:
         linkObj.clicks += 1
         ip = get_client_ip(request)
-        ip_origin = IP_Adresses(shortCode=linkObj, ip_address=ip)
+        response = requests.get(f'https://ipapi.co/{ip}/json/').json()
+        city = response.get('city')
+        region = response.get('region')
+        country = response.get('country')
+        longitude = response.get('longitude')
+        latitude = response.get('latitude')
+        ip_origin = IP_Adresses(shortCode=linkObj, ip_address=ip, city=city, region=region, country=country,
+                                longitude=longitude,
+                                latitude=latitude)
         linkObj.save()
         ip_origin.save()
         return HttpResponse(linkObj.longLink)
     else:
         return HttpResponse("wrong")
 
+
 @login_required(login_url='login')
 def analytics(request):
     labels = []
     data = []
 
-    goodCount=0
-    badCount=0
-    pendingCount =0
-    barlabel=['Good', 'Pending', 'Bad']
-
-
+    goodCount = 0
+    badCount = 0
+    pendingCount = 0
+    barlabel = ['Good', 'Pending', 'Bad']
 
     queryset = Url.objects.all()
     for chartData in queryset:
         labels.append(chartData.longLink)
         data.append(chartData.clicks)
 
-    
         if chartData.status == 'Good':
-            goodCount+=1
+            goodCount += 1
         elif chartData.status == 'Pending':
-            pendingCount+=1
+            pendingCount += 1
         else:
-            badCount+=1
-            
+            badCount += 1
 
-    bardata = [goodCount,pendingCount,badCount]
-    
-    
+    bardata = [goodCount, pendingCount, badCount]
+
     return render(request, 'analytics.html', {
         'labels': labels,
         'data': data,

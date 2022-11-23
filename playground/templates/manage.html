@@ -126,6 +126,7 @@
                         <th>Date Visited</th>
                         <th>Object ID</th>
                         <th>IP Address</th>
+                        <th>Location</th>
                     </tr>
                 </thead>
                 <tbody ip-container>
@@ -134,6 +135,7 @@
                             <td class="visited-td" visited-content></td>
                             <td class="ip-td" id-content></td>
                             <td class="ip-td" ip-content></td>
+                            <td class="location-td" location-content></td>
                         </tr>
                     </template>
                 </tbody>
@@ -361,15 +363,18 @@
     var ipContainer = document.querySelector("[ip-container]")
     var passwordlist = JSON.parse("{{passwordlist|escapejs}}")
     var passwordID = JSON.parse("{{passwordIDlist|escapejs}}")
+    var location = JSON.parse("{{locationList|escapejs}}")
 
     for (let i = 0; i<objID.length; i++){
         const cloneNode  = ipTemplate.content.cloneNode(true).children[0]
         const ipContent = cloneNode.querySelector('[ip-content]')
         const idContent = cloneNode.querySelector('[id-content]')
         const visitedContent = cloneNode.querySelector('[visited-content]')
+        const locationContent = cloneNode.querySelector('[location-content]')
         idContent.textContent = objID[i]
         ipContent.textContent = ip[i]
         visitedContent.textContent = visitedDate[i]
+        locationContent.textContent = location[i]
         ipContainer.append(cloneNode)
     }
 
