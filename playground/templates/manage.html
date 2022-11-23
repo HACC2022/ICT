@@ -99,7 +99,6 @@
     }
 </style>
 
-
 <div class="input-group container" style="padding-left: 0px; padding-top: 30px; display: flex;">
     {% csrf_token %}
     <input type="search-field" class="form-control" name="searchfield" id="searchfield"
@@ -116,8 +115,9 @@
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close">&times;</span>
-        <div>
-            <h4 style="text-align: center;" id = "password-display"></h4>
+        <div class="" style="text-align: center; padding-bottom:20px;">
+            <h4 class="" id = "password-display">Test</h4>
+            <button class="btn btn-primary copy-password" id="copy-password" name ="copy-password">Copy Password</button>
         </div>
         <div id="myIPTable" style="width:100%;max-width:700px" class="container">
             <table class="table table-light table-bordered" style="padding-top: 20px;">
@@ -307,7 +307,6 @@
     copyBtn.forEach(btn => btn.addEventListener('click', () => {
         const addShort = btn.getAttribute('short-add')
         navigator.clipboard.writeText(myHostName + "/" + addShort)
-        console.log(addShort)
     }))
 
     // $("#search").on("click", function (e) {
@@ -347,7 +346,7 @@
     var passwordlist = JSON.parse("{{passwordlist|escapejs}}")
     var passwordID = JSON.parse("{{passwordIDlist|escapejs}}")
     var locationList = JSON.parse("{{locationList|escapejs}}")
-    console.log(locationList)
+    var copyPasswordBtn = [...document.getElementsByClassName('copy-password')]
 
     for (let i = 0; i<objID.length; i++){
         const cloneNode  = ipTemplate.content.cloneNode(true).children[0]
@@ -362,6 +361,7 @@
         ipContainer.append(cloneNode)
     }
 
+    passID = 0;
     showip.forEach(btn => btn.addEventListener('click', () => {
         var btnIpId = btn.getAttribute("more")
         var ipRow = [...document.getElementsByName('ip-row')]
@@ -375,21 +375,23 @@
         }
 
         passStyle = document.getElementById('password-display')
+        $('#password-display').html("There is no Password")
+        passStyle.style = "color:red;"
+        document.getElementById('copy-password').disabled = true
         for (let i = 0; i<passwordID.length; i++){
             if (passwordID[i] == btnIpId){
                 $('#password-display').html("Password: " + passwordlist[i])
-                passStyle.style = "color:black; text-align: center;"
+                passStyle.style = "color:black;"
+                document.getElementById('copy-password').disabled = false
+                copyPasswordBtn.forEach(btn => btn.addEventListener('click', ()=>{
+                    //add the copy password function here
+                }))
                 break
-            }
-            else{
-                $('#password-display').html("There is no Password")
-                passStyle.style = "color:red; text-align: center;"
             }
         }
 
         modal.style.display = "block";
     }))
-
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
