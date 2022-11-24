@@ -22,6 +22,14 @@ def hello(request):
     return render(request, 'index.html', {'name': 'zeek'})
 
 
+def status_method(url):
+    try:
+        r = requests.head(url)
+        status_code = r.status_code
+        return status_code
+    except requests.RequestException:
+        return "No server"
+
 @login_required(login_url='login')
 def shorten(request):
     host = request.META['HTTP_HOST']
@@ -30,6 +38,10 @@ def shorten(request):
         pw = request.POST['pass']
         if ".gov" not in lURL:
             return HttpResponse("error")
+        if status_method(lURL)== "No Server":
+            return HttpResponse("No Server")
+        if status_method(lURL) != 200:
+            return HttpResponse("Bad")
         sCode = str(uuid.uuid4())[:5]
         shortUrl = Url(longLink=lURL, shortCode=sCode)
         shortUrl.save()

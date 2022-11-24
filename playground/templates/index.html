@@ -88,8 +88,25 @@
                         text.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
-                    }else{
+                    }
+                    if(data == 'error'){
                         alert("Please provide a link containing the .gov domain!");
+                        s.style.display = "none"
+                        text.style.display = "none"
+                        checkBox.checked = false;
+                        textbox.value = "";
+                        $('h4').html("")
+                    }
+                    if (data == "Bad"){
+                        alert("The link you have provide is Bad. Please provide another link");
+                        s.style.display = "none"
+                        text.style.display = "none"
+                        checkBox.checked = false;
+                        textbox.value = "";
+                        $('h4').html("")
+                    }
+                    if (data == "No Server"){
+                        alert("The link does not exist. Provide check for mispell or provide another link");
                         s.style.display = "none"
                         text.style.display = "none"
                         checkBox.checked = false;
