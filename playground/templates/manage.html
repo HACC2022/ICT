@@ -179,7 +179,7 @@
                 </td>
                 <td class="">{{ hostname }}/{{instance.shortCode}}</td>
                 <td class="" style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);">
-                    <p class = "longlinkClass" style="display: none;">{{instance.longLink}}</p>
+                    <p class = "longlinkClass" style="display: none;">{{instance.longLink}} {{instance.status}}</p>
                     {% if instance.longLink|length > 30%}
                     {{instance.longLink|slice:"0:30"}}....................
                     {%else%}
@@ -233,7 +233,7 @@
         for(i =0; i <rowTable.length; i++){
             var longUrlList = rowLongLink[i].innerHTML.toLowerCase()
             
-            if (!longUrlList.includes(search_input)){
+            if (!longUrlList.includes(search_input) ){
                 rowTable[i].style.display = "none"
             }
             else if (search_input === ""){
