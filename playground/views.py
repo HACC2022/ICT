@@ -35,6 +35,8 @@ def shorten(request):
     host = request.META['HTTP_HOST']
     if request.method == 'POST':
         lURL = request.POST['link']
+        if "https://" not in lURL:
+            lURL = "https://" + lURL
         pw = request.POST['pass']
         if ".gov" not in lURL:
             return HttpResponse("error")
