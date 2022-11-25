@@ -120,6 +120,7 @@
 
         $('#copy-btn').click(function (e) {
             e.preventDefault();
+            $(this).removeClass().addClass("btn btn-success").html("Copied")
             var text = document.getElementById('short-url-display').innerHTML;
             navigator.clipboard.writeText(text);
         })

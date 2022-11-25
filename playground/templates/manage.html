@@ -222,6 +222,7 @@
     var myHostName = "{{hostname}}";
 
     const copyBtn = [...document.getElementsByName('copy')]
+    const copyBtn2 = [...document.getElementsByName('copy')]
     const showip = [...document.getElementsByName('show-ip')]
     const rowip = [...document.getElementsByName('ip')]
     // const longlinkName = [...document.getAttribute('search-compare')]
@@ -242,7 +243,6 @@
             if (statusbarId == statusLinkCheck){
                 copyStatus = copyBtn[i].getAttribute('copyStatus')
                 moreStatus = showip[i].getAttribute('moreStatus')
-                console.log(moreStatus)
                 $.ajax({
                     url: 'status/'+statusId,
                     data:{
@@ -366,6 +366,18 @@
 
 
     copyBtn.forEach(btn => btn.addEventListener('click', () => {
+        btnId = btn.getAttribute('copyStatus')
+
+        
+        for(i = 0; i < copyBtn2.length; i++){
+            var btnId2 = copyBtn2[i].getAttribute('copyStatus')
+            if (copyBtn2[i].getAttribute('copyStatus') == btnId){
+                $("#"+btnId2).html("Copied").removeClass().addClass("btn btn-success")
+            }
+            else{
+                $("#"+btnId2).html("Copy").removeClass().addClass("btn btn-primary")
+            }
+        }
         const addShort = btn.getAttribute('short-add')
         navigator.clipboard.writeText(myHostName + "/" + addShort)
     }))
@@ -451,18 +463,18 @@
             }
         }
 
-        modal.style.display = "block";
+        $("#myModal").slideDown(500)
     }))
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
-        modal.style.display = "none";
+        $("#myModal").slideUp(500)
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal) {
-            modal.style.display = "none";
+            $("#myModal").slideUp(500)
         }
     }
 </script>
