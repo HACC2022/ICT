@@ -36,14 +36,17 @@ def shorten(request):
     if request.method == 'POST':
         lURL = request.POST['link']
         if "https://" not in lURL:
-            lURL = "https://" + lURL
+            lURL = "https://" + lURL + "/"
         pw = request.POST['pass']
         if ".gov" not in lURL:
             return HttpResponse("error")
         if status_method(lURL)== "No Server":
             return HttpResponse("No Server")
         if status_method(lURL) != 200:
-            return HttpResponse("Bad")
+            lURL = request.POST['link']
+            lURL = "https://www." + lURL + "/"
+            if status_method(lURL) != 200:
+                return HttpResponse("Bad")
         sCode = str(uuid.uuid4())[:5]
         shortUrl = Url(longLink=lURL, shortCode=sCode)
         shortUrl.save()
