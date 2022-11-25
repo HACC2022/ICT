@@ -144,6 +144,10 @@
     </div>
 </div>
 
+<!-- <div>
+    <button class="updateStatus btn btn-primary">Test</button>
+</div> -->
+
 <div class="" style="padding: 30px;">
     <!-- <button class="btn btn-check-url">Check URLs</button> -->
     <table class="table table-body">
@@ -164,16 +168,16 @@
             <tr class="record" name="record" id={{instance.shortCode}}>
                 <td style="text-align: center;">{{instance.creationDate}}</td>
                 <td style="text-align: center;">{{instance.clicks}}</td>
-                <td style="text-align: center;">
+                <td style="text-align: center;" id = {{instance.shortCode}}{{instance.id}}>
                     
                     {%if instance.status == "Good"%}
-                    <span class="badge badge-success">{{instance.status}}</span>
+                    <span class="badge badge-success" name="status-bar" statusBar={{instance.shortCode}}{{instance.id}} >{{instance.status}}</span>
                     {%elif instance.status == "Bad"%}
-                    <span class="badge badge-danger">{{instance.status}}</span>
+                    <span class="badge badge-danger" name="status-bar" statusBar={{instance.shortCode}}{{instance.id}}>{{instance.status}}</span>
                     {%elif instance.status == "No Server"%}
-                    <span class="badge badge-danger">{{instance.status}}</span>
+                    <span class="badge badge-danger" name="status-bar" statusBar={{instance.shortCode}}{{instance.id}}>{{instance.status}}</span>
                     {%else%}
-                    <span class="badge badge-warning">{{instance.status}}</span>
+                    <span class="badge badge-warning" name="status-bar" statusBar={{instance.shortCode}}{{instance.id}}>{{instance.status}}</span>
                     {%endif%}
                 
                 </td>
@@ -191,23 +195,22 @@
                     style="height:35px; opacity: 100%;">Delete</a>
 
                     {%if instance.status == "Good"%}
-                        <button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
+                        <button copyStatus={{instance.shortCode}}copy name="copy" class="btn btn-primary copy-btn" id={{instance.shortCode}}copy style="height:35px;"
                         short-add={{instance.shortCode}}>Copy</button>
-                        <button name = "show-ip" id = "myBtn"  class="btn more-btn" more={{instance.id}}>More</button>
+                        <button moreStatus={{instance.shortCode}}more name = "show-ip" class="btn more-btn" id = {{instance.shortCode}}more more={{instance.id}}>More</button>
                     {%elif instance.status == "Pending"%}
-                        <button name="copy" class="btn btn-primary copy-btn" style="height:35px;"
+                        <button copyStatus={{instance.shortCode}}copy name="copy" class="btn btn-primary copy-btn" id={{instance.shortCode}}copy style="height:35px;"
                         short-add={{instance.shortCode}}>Copy</button>
-                        <button name = "show-ip" id = "myBtn"  class="btn more-btn" more={{instance.id}}>More</button>
+                        <button moreStatus={{instance.shortCode}}more name = "show-ip" class="btn more-btn" id = {{instance.shortCode}}more more={{instance.id}}>More</button>
                     {%else%}
-                        <button class="btn btn-primary copy-btn" style="height:35px;"
-                        disabled>Copy</button>
-                        <button class="btn more-btn-disable" disabled>More</button>
+                        <button copyStatus={{instance.shortCode}}copy name="copy" class="btn btn-primary copy-btn" id={{instance.shortCode}}copy style="height:35px;" disabled>Copy</button>
+                        <button moreStatus={{instance.shortCode}}more name = "show-ip" class="btn more-btn-disable" id = {{instance.shortCode}}more disabled>More</button>
                     {%endif%}
 
 
                     
-                    <a href="{%url 'status_get' instance.id%}" class="btn more-btn check" name="check-btn">Check</a>
-                    <!-- <button class="btn more-btn" name="check-btn" long-url={{instance.longLink}}>Check</button> -->
+                    <!-- <a href="{%url 'status_get' instance.id%}" class="btn more-btn check" name="check-btn">Check</a> -->
+                    <button class="btn more-btn updateStatus" name="check-btn" long-url={{instance.longLink}} url-id = {{instance.id}} status-link-check = "{{instance.shortCode}}{{instance.id}}">Check</button>
                 </td>
             </tr>
             {%endfor %}
@@ -225,7 +228,60 @@
     // console.log(longlinkName)
     const rowLongLink = [...document.getElementsByClassName('longlinkClass')]
     var rowTable = [...document.getElementsByName('record')]
-    
+    var checkBtn = [...document.getElementsByName('check-btn')]
+    var statusClass = [...document.getElementsByName('status-bar')]
+
+    checkBtn.forEach(btn => btn.addEventListener('click', function(e){
+        e.preventDefault()
+
+        var statusId = $(this).attr('url-id')
+        var statusLongUrl = $(this).attr('long-url')
+        var statusLinkCheck =$(this).attr('status-link-check')
+        for (i =0; i<statusClass.length;i++){
+            statusbarId = statusClass[i].getAttribute('statusBar')
+            if (statusbarId == statusLinkCheck){
+                copyStatus = copyBtn[i].getAttribute('copyStatus')
+                moreStatus = showip[i].getAttribute('moreStatus')
+                console.log(moreStatus)
+                $.ajax({
+                    url: 'status/'+statusId,
+                    data:{
+                        statusID : statusId,
+                        statusUrl : statusLongUrl,
+                    },
+                    success: function(data){
+                        if (data == "Good"){
+                            $('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("Good").addClass("badge-success").addClass("badge")
+                            document.getElementById(copyStatus).disabled = false
+                            document.getElementById(moreStatus).disabled = false
+                            $('#'+moreStatus).removeClass().addClass("btn").addClass("more-btn")
+                        }
+                        if (data == "Bad"){
+                            $('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("Bad").addClass("badge-danger").addClass("badge")
+                            document.getElementById(copyStatus).disabled = true
+                            document.getElementById(moreStatus).disabled = true
+                            $('#'+moreStatus).removeClass().addClass('btn more-btn-disable')
+                        }
+                        if (data == "Pending"){
+                            $('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("Pending").addClass("badge-warning").addClass("badge")
+                            document.getElementById(copyStatus).disabled = false
+                            document.getElementById(moreStatus).disabled = false
+                            $('#'+moreStatus).removeClass().addClass('btn more-btn')
+                        }
+                        if (data == "No Server"){
+                            $('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("No Server").addClass("badge-danger").addClass("badge")
+                            document.getElementById(copyStatus).disabled = true
+                            document.getElementById(moreStatus).disabled = true
+                            $('#'+moreStatus).removeClass().addClass('btn more-btn-disable')
+                        }
+                    }
+                })
+            }
+        }
+    }))
+
+
+
     //const search_btn = document.getElementById('search')
     $('#search').on('click', function (e){
         var search_input = document.getElementById('searchfield').value
@@ -337,7 +393,7 @@
     var modal = document.getElementById("myModal");
 
     // Get the button that opens the modal
-    var btnID = document.getElementById("myBtn");
+    // var btnID = document.getElementById("myBtn");
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
@@ -372,10 +428,10 @@
         var ipRow = [...document.getElementsByName('ip-row')]
         for(let i =0; i<objID.length;i++){
             if (objID[i] == btnIpId){
-                ipRow[i].style.visibility = "visible"
+                ipRow[i].style.display = ""
             }
             else{
-                ipRow[i].style.visibility = "collapse"
+                ipRow[i].style.display = "none"
             }
         }
 

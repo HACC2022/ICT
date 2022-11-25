@@ -198,15 +198,15 @@ def get_status(request, pk):
         if (status_code == 200):
             longUrl.status = "Good"
             longUrl.save()
-            return HttpResponseRedirect(reverse('manage'))
+            return HttpResponse("Good")
         else:
             longUrl.status = "Bad"
             longUrl.save()
-            return HttpResponseRedirect(reverse('manage'))
+            return HttpResponse("Bad")
     except requests.RequestException:
         longUrl.status = "No Server"
         longUrl.save()
-        return HttpResponseRedirect(reverse('manage'))
+        return HttpResponse("No Server")
 
 
 def verification(request):
