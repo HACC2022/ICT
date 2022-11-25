@@ -161,7 +161,7 @@
         </thead>
         <tbody class="table-body">
             {%for instance in object_list %}
-            <tr class="record" name="record">
+            <tr class="record" name="record" id={{instance.shortCode}}>
                 <td style="text-align: center;">{{instance.creationDate}}</td>
                 <td style="text-align: center;">{{instance.clicks}}</td>
                 <td style="text-align: center;">
@@ -178,7 +178,7 @@
                 
                 </td>
                 <td class="">{{ hostname }}/{{instance.shortCode}}</td>
-                <td class="" style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);">
+                <td class={{instance.shortCode}} style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686);" data-id = {{instance.shortCode}}>
                     <p class = "longlinkClass" style="display: none;">{{instance.longLink}} {{instance.status}}</p>
                     {% if instance.longLink|length > 30%}
                     {{instance.longLink|slice:"0:30"}}....................
@@ -232,15 +232,17 @@
         search_input.toLowerCase()
         for(i =0; i <rowTable.length; i++){
             var longUrlList = rowLongLink[i].innerHTML.toLowerCase()
+            var fadeID = rowLongLink[i].parentElement.getAttribute('data-id')
+            var fadeSearch = $("#"+fadeID)
             
             if (!longUrlList.includes(search_input) ){
-                rowTable[i].style.display = "none"
+                fadeSearch.fadeOut(500)
             }
             else if (search_input === ""){
-                rowTable[i].style.display = ""
+                fadeSearch.fadeIn(500)
             }
             else{
-                rowTable[i].style.display = ""
+                fadeSearch.fadeIn(500)
             }
         }
     })
@@ -250,7 +252,10 @@
         search_input.value = ""
         for(i =0; i <rowTable.length; i++){
             var longUrlList = rowLongLink[i].innerHTML.toLowerCase()
-            rowTable[i].style.display = ""
+            var fadeID = rowLongLink[i].parentElement.getAttribute('data-id')
+            var fadeSearch = $("#"+fadeID)
+            fadeSearch.fadeIn(500)
+            //rowTable[i].style.display = ""
         }
         
     })
