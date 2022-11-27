@@ -372,7 +372,12 @@
         for(i = 0; i < copyBtn2.length; i++){
             var btnId2 = copyBtn2[i].getAttribute('copyStatus')
             if (copyBtn2[i].getAttribute('copyStatus') == btnId){
-                $("#"+btnId2).html("Copied").removeClass().addClass("btn btn-success")
+                var btnId3 = $("#"+btnId2)
+                btnId3.html("Copied").removeClass().addClass("btn btn-success")
+                setTimeout(function(){
+                    btnId3.html("Copy").removeClass().addClass("btn btn-primary")
+                }, 3000)
+                
             }
             else{
                 $("#"+btnId2).html("Copy").removeClass().addClass("btn btn-primary")
