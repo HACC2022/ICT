@@ -12,6 +12,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 
 # Create your views here.
@@ -99,8 +100,10 @@ def manage_view(request):
     for x in ipset:
         iplist.append(x.ip_address)
         idlist.append(x.shortCode.pk)
-        date = str(x.visitedDate.month) + "/" + str(x.visitedDate.day) + "/" + str(x.visitedDate.year) + " " + \
-               str(x.visitedDate.hour) + ":" + str(x.visitedDate.minute)
+        hr = str(x.visitedDate.astimezone().hour)
+        min = str(x.visitedDate.astimezone().minute)
+        sec = str(x.visitedDate.astimezone().second)
+        date = str(x.visitedDate.date()) + " " + hr + ":" + min + ":" + sec
         visitList.append(date)
         location = str(x.city) + ", " + str(x.region) + ", " + str(x.country)
         locationList.append(location)
