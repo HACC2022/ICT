@@ -250,26 +250,40 @@
                         statusUrl : statusLongUrl,
                     },
                     success: function(data){
+                        var statusHolder =  $('#'+statusLinkCheck).children()
                         if (data == "Good"){
-                            $('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("Good").addClass("badge-success").addClass("badge")
+                            statusHolder.fadeOut(500)
+                            setTimeout(function(){
+                                statusHolder.html("Good").removeClass().addClass("badge-success").addClass("badge").fadeIn(500)
+                            }, 500)
+                            //$('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("Good").addClass("badge-success").addClass("badge")
                             document.getElementById(copyStatus).disabled = false
                             document.getElementById(moreStatus).disabled = false
                             $('#'+moreStatus).removeClass().addClass("btn").addClass("more-btn")
                         }
                         if (data == "Bad"){
-                            $('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("Bad").addClass("badge-danger").addClass("badge")
+                            statusHolder.fadeOut(500)
+                            setTimeout(function(){
+                                statusHolder.html("Bad").removeClass().addClass("badge-danger").addClass("badge").fadeIn(500)
+                            }, 500)
                             document.getElementById(copyStatus).disabled = true
                             document.getElementById(moreStatus).disabled = true
                             $('#'+moreStatus).removeClass().addClass('btn more-btn-disable')
                         }
                         if (data == "Pending"){
-                            $('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("Pending").addClass("badge-warning").addClass("badge")
+                            statusHolder.fadeOut(500)
+                            setTimeout(function(){
+                                statusHolder.html("Pending").removeClass().addClass("badge-warning").addClass("badge").fadeIn(500)
+                            }, 500)
                             document.getElementById(copyStatus).disabled = false
                             document.getElementById(moreStatus).disabled = false
                             $('#'+moreStatus).removeClass().addClass('btn more-btn')
                         }
                         if (data == "No Server"){
-                            $('#'+statusLinkCheck).children().fadeOut(500).removeClass().fadeIn(500).html("No Server").addClass("badge-danger").addClass("badge")
+                            statusHolder.fadeOut(500)
+                            setTimeout(function(){
+                                statusHolder.html("No Server").removeClass().addClass("badge-danger").addClass("badge").fadeIn(500)
+                            }, 500)
                             document.getElementById(copyStatus).disabled = true
                             document.getElementById(moreStatus).disabled = true
                             $('#'+moreStatus).removeClass().addClass('btn more-btn-disable')
