@@ -12,5 +12,5 @@ urlpatterns = [
     path('delete/<pk>/', views.manage_view_delete, name='delete_data'),
     path('manage/status/<pk>/', views.get_status, name='status_get'),
     path('verification/', views.verification, name='verification'),
-    path('analytics/', views.analytics, name='analytics'),
+    path('analytics/', views.analytics, name='analytics')
 ]

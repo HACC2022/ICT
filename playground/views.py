@@ -240,13 +240,15 @@ def verification(request):
 def analytics(request):
     labels = []
     data = []
-
     goodCount = 0
     badCount = 0
     pendingCount = 0
+    longitude = []
+    latitude = []
     barlabel = ['Good', 'Pending', 'Bad']
 
     queryset = Url.objects.all()
+    q2 = IP_Adresses.objects.all()
     for chartData in queryset:
         labels.append(chartData.longLink)
         data.append(chartData.clicks)
@@ -259,10 +261,27 @@ def analytics(request):
             badCount += 1
 
     bardata = [goodCount, pendingCount, badCount]
+   
 
-    return render(request, 'analytics.html', {
+    for ipinfo in q2:
+        long=str(ipinfo.longitude)
+        longitude.append(long)
+        lat = str(ipinfo.latitude)
+        latitude.append(lat)
+
+    dumpLong = dumps(longitude)
+    dumpLat = dumps(latitude)
+
+
+    context={
         'labels': labels,
         'data': data,
         'barlabels': barlabel,
-        'bardata': bardata
-    })
+        'bardata': bardata,
+        'longitude':dumpLong,
+        'latitude':dumpLat
+
+    }  
+
+    return render(request, 'analytics.html',context)
+
