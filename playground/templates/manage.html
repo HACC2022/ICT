@@ -476,7 +476,7 @@
                 passStyle.style = "color:black;"
                 document.getElementById('copy-password').disabled = false
                 copyPasswordBtn.forEach(btn => btn.addEventListener('click', ()=>{
-                    //add the copy password function here
+                    navigator.clipboard.writeText(passwordlist)
                 }))
                 break
             }
