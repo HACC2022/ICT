@@ -31,17 +31,20 @@ def status_method(url):
     except requests.RequestException:
         return "No server"
 
+
 @login_required(login_url='login')
 def shorten(request):
     host = request.META['HTTP_HOST']
     if request.method == 'POST':
         lURL = request.POST['link']
+        if Url.objects.filter(longLink=lURL).exists():
+            return HttpResponse("sCode " + host + "/" + Url.objects.get(longLink=lURL).shortCode)
         if "https://" not in lURL:
             lURL = "https://" + lURL + "/"
         pw = request.POST['pass']
         if ".gov" not in lURL:
             return HttpResponse("error")
-        if status_method(lURL)== "No Server":
+        if status_method(lURL) == "No Server":
             return HttpResponse("No Server")
         if status_method(lURL) != 200:
             lURL = request.POST['link']
@@ -261,10 +264,9 @@ def analytics(request):
             badCount += 1
 
     bardata = [goodCount, pendingCount, badCount]
-   
 
     for ipinfo in q2:
-        long=str(ipinfo.longitude)
+        long = str(ipinfo.longitude)
         longitude.append(long)
         lat = str(ipinfo.latitude)
         latitude.append(lat)
@@ -272,16 +274,14 @@ def analytics(request):
     dumpLong = dumps(longitude)
     dumpLat = dumps(latitude)
 
-
-    context={
+    context = {
         'labels': labels,
         'data': data,
         'barlabels': barlabel,
         'bardata': bardata,
-        'longitude':dumpLong,
-        'latitude':dumpLat
+        'longitude': dumpLong,
+        'latitude': dumpLat
 
-    }  
+    }
 
-    return render(request, 'analytics.html',context)
-
+    return render(request, 'analytics.html', context)

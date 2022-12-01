@@ -82,6 +82,15 @@
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
                 },
                 success: function (data) {
+                    if (data.includes("sCode")){
+                        alert("The link you have provided already exists. Please note that the initial short link will be provided.");
+                        text = data.slice(5);
+                        $('h4').html(text)
+                        s.style.display = "inline"
+                        text.style.display = "none"
+                        checkBox.checked = false;
+                        textbox.value = "";
+                    }
                     if (data != "error"){
                         $('h4').html(data)
                         s.style.display = "inline"
