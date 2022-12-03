@@ -59,6 +59,7 @@
     var checkBox = document.getElementById("veri");
     var text = document.getElementById("verification");
     var textbox = document.getElementById("veripass");
+    var hostname = "{{hostname}}"
 
     function showVerification() {
       if (checkBox.checked == true){
@@ -73,6 +74,7 @@
         $('#submit-btn-function').click(function (e) {
             e.preventDefault();
             var s = document.getElementById("short-box")
+            var h4Style = document.getElementById("short-url-display")
             $.ajax({
                 type: 'POST',
                 url: '/shorten',
@@ -85,7 +87,8 @@
                     if (data.includes("sCode")){
                         alert("The link you have provided already exists. Please note that the initial short link will be provided.");
                         text = data.slice(5);
-                        $('h4').html(text)
+                        $('h4').html("Here is the Existing Short URL: "+text)
+                        h4Style.style = "color:red;"
                         s.style.display = "inline"
                         text.style.display = "none"
                         checkBox.checked = false;
@@ -130,8 +133,8 @@
         $('#copy-btn').click(function (e) {
             e.preventDefault();
             $(this).removeClass().addClass("btn btn-success").html("Copied")
-            var text = document.getElementById('short-url-display').innerHTML;
-            navigator.clipboard.writeText(text);
+            var text = document.getElementById('short-url-display').innerHTML.slice(-5);
+            navigator.clipboard.writeText(hostname + '/'+text);
         })
     })
 </script>

@@ -20,7 +20,12 @@ from datetime import datetime
 
 @login_required(login_url='login')
 def hello(request):
-    return render(request, 'index.html', {'name': 'zeek'})
+    host = request.META['HTTP_HOST']
+    context = {
+        'hostname' : host,
+        'name' : 'zeek'
+    }
+    return render(request, 'index.html', context)
 
 
 def status_method(url):
