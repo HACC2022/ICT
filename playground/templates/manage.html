@@ -115,7 +115,7 @@
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close">&times;</span>
-        <div class="" style="text-align: center; padding-bottom:20px;">
+        <div class="" name="password-box" style="text-align: center; padding-bottom:20px;">
             <h4 class="" id = "password-display">Test</h4>
             <button class="btn btn-primary copy-password" id="copy-password" name ="copy-password">Copy Password</button>
         </div>
@@ -228,7 +228,6 @@
     var rowTable = [...document.getElementsByName('record')]
     var checkBtn = [...document.getElementsByName('check-btn')]
     var statusClass = [...document.getElementsByName('status-bar')]
-    // console.log(rowLongLink[0].getAttribute('longlinkAttr'))
 
     checkBtn.forEach(btn => btn.addEventListener('click', function(e){
         e.preventDefault()
@@ -385,8 +384,6 @@
 
     copyBtn.forEach(btn => btn.addEventListener('click', () => {
         btnId = btn.getAttribute('copyStatus')
-
-        
         for(i = 0; i < copyBtn2.length; i++){
             var btnId2 = copyBtn2[i].getAttribute('copyStatus')
             if (copyBtn2[i].getAttribute('copyStatus') == btnId){
@@ -395,7 +392,6 @@
                 setTimeout(function(){
                     btnId3.html("Copy").removeClass().addClass("btn btn-primary")
                 }, 3000)
-                
             }
             else{
                 $("#"+btnId2).html("Copy").removeClass().addClass("btn btn-primary")
@@ -480,6 +476,10 @@
                 passStyle.style = "color:black;"
                 document.getElementById('copy-password').disabled = false
                 copyPasswordBtn.forEach(btn => btn.addEventListener('click', ()=>{
+                    $('#copy-password').html('Copied').removeClass().addClass('btn btn-success')
+                    setTimeout(function(){
+                        $('#copy-password').html('Copy Password').removeClass().addClass('btn btn-primary')
+                    }, 1000)
                     navigator.clipboard.writeText(passwordlist)
                 }))
                 break
@@ -492,12 +492,18 @@
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         $("#myModal").fadeOut(300)
+        setTimeout(function(){
+            $('#copy-password').html('Copy Password').removeClass().addClass('btn btn-primary')
+        }, 500)
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal) {
             $("#myModal").fadeOut(300)
+            setTimeout(function(){
+                $('#copy-password').html('Copy Password').removeClass().addClass('btn btn-primary')
+            }, 500)
         }
     }
 </script>
