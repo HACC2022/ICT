@@ -45,11 +45,14 @@
                 </div>
         <div class="form-group box-spcae">
             <label for="urlOutput">Shortened URL</label>
-            <h4 id="short-url-display"></h4>
-            <div id="short-box">
-                <button name="copy" class="btn submitBtnStyle copy-btn" id="copy-btn">Copy</button>
+            <div id = "short-box">
+                <h4 id="short-url-display"></h4>
+                <div id="">
+                    <button name="copy" class="btn submitBtnStyle copy-btn" id="copy-btn">Copy</button>
+                </div>
             </div>
-        </div>
+            </div>
+           
         </div>
     </form>
     </div>
@@ -75,6 +78,9 @@
             e.preventDefault();
             var s = document.getElementById("short-box")
             var h4Style = document.getElementById("short-url-display")
+            var scBox = document.getElementById("short-copy-box")
+            s.style.display ="none"
+            h4Style.style = "color:black;"
             $.ajax({
                 type: 'POST',
                 url: '/shorten',
@@ -87,24 +93,20 @@
                     if (data.includes("sCode")){
                         alert("The link you have provided already exists. Please note that the initial short link will be provided.");
                         text = data.slice(5);
-                        $('h4').html("Here is the Existing Short URL: "+text)
                         h4Style.style = "color:red;"
                         s.style.display = "inline"
-                        text.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
                     }
                     if (data != "error"){
-                        $('h4').html(data)
+                        $('h4').html("Here is the Existing Short URL: "+text)
                         s.style.display = "inline"
-                        text.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
                     }
                     if(data == 'error'){
                         alert("Please provide a link containing the .gov domain!");
                         s.style.display = "none"
-                        text.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
                         $('h4').html("")
@@ -112,7 +114,6 @@
                     if (data == "Bad"){
                         alert("The link you have provide is Bad. Please provide another link");
                         s.style.display = "none"
-                        text.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
                         $('h4').html("")
@@ -120,7 +121,6 @@
                     if (data == "No Server"){
                         alert("The link does not exist. Provide check for mispell or provide another link");
                         s.style.display = "none"
-                        text.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
                         $('h4').html("")

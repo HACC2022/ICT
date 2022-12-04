@@ -42,8 +42,6 @@ def shorten(request):
     host = request.META['HTTP_HOST']
     if request.method == 'POST':
         lURL = request.POST['link']
-        if Url.objects.filter(longLink=lURL).exists():
-            return HttpResponse("sCode " + host + "/" + Url.objects.get(longLink=lURL).shortCode)
         if "https://" not in lURL:
             lURL = "https://" + lURL + "/"
         pw = request.POST['pass']
@@ -56,6 +54,8 @@ def shorten(request):
             lURL = "https://www." + lURL + "/"
             if status_method(lURL) != 200:
                 return HttpResponse("Bad")
+        if Url.objects.filter(longLink=lURL).exists():
+            return HttpResponse("sCode " + host + "/" + Url.objects.get(longLink=lURL).shortCode)
         sCode = str(uuid.uuid4())[:5]
         shortUrl = Url(longLink=lURL, shortCode=sCode)
         shortUrl.save()
