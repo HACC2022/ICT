@@ -182,7 +182,7 @@
                 </td>
                 <td class="">{{ hostname }}/{{instance.shortCode}}</td>
                 <td colspan="2" class={{instance.shortCode}} style="border-left-style: solid; border-left-color: rgba(121, 121, 121, 0.686); width: 40%;" data-id = {{instance.shortCode}}>
-                    <p class = "longlinkClass" style="display: none;">{{instance.longLink}} {{instance.status}}</p>
+                    <p style="display: none;" class = "longlinkClass" id = {{instance.shortCode}}p longLinkAttr = {{instance.longLink}} pAttr = {{instance.shortCode}}p>{{instance.longLink}} {{instance.status}}</p>
                     {% if instance.longLink|length > 40%}
                     {{instance.longLink|slice:"0:40"}}....................
                     {%else%}
@@ -224,10 +224,11 @@
     const rowip = [...document.getElementsByName('ip')]
     // const longlinkName = [...document.getAttribute('search-compare')]
     // console.log(longlinkName)
-    const rowLongLink = [...document.getElementsByClassName('longlinkClass')]
+    var rowLongLink = [...document.getElementsByClassName('longlinkClass')]
     var rowTable = [...document.getElementsByName('record')]
     var checkBtn = [...document.getElementsByName('check-btn')]
     var statusClass = [...document.getElementsByName('status-bar')]
+    // console.log(rowLongLink[0].getAttribute('longlinkAttr'))
 
     checkBtn.forEach(btn => btn.addEventListener('click', function(e){
         e.preventDefault()
@@ -240,6 +241,8 @@
             if (statusbarId == statusLinkCheck){
                 copyStatus = copyBtn[i].getAttribute('copyStatus')
                 moreStatus = showip[i].getAttribute('moreStatus')
+                pStatus = rowLongLink[i].getAttribute('pAttr')
+                pHolder = $('#'+pStatus)
                 $.ajax({
                     url: 'status/'+statusId,
                     data:{
@@ -257,6 +260,7 @@
                             document.getElementById(copyStatus).disabled = false
                             document.getElementById(moreStatus).disabled = false
                             $('#'+moreStatus).removeClass().addClass("btn").addClass("more-btn")
+                            pHolder.html(statusLongUrl+" "+data)
                         }
                         if (data == "Bad"){
                             statusHolder.fadeOut(500)
@@ -266,6 +270,7 @@
                             document.getElementById(copyStatus).disabled = true
                             document.getElementById(moreStatus).disabled = true
                             $('#'+moreStatus).removeClass().addClass('btn more-btn-disable')
+                            pHolder.html(statusLongUrl+" " + data)
                         }
                         if (data == "Pending"){
                             statusHolder.fadeOut(500)
@@ -275,6 +280,7 @@
                             document.getElementById(copyStatus).disabled = false
                             document.getElementById(moreStatus).disabled = false
                             $('#'+moreStatus).removeClass().addClass('btn more-btn')
+                            pHolder.html(statusLongUrl+" "+data)
                         }
                         if (data == "No Server"){
                             statusHolder.fadeOut(500)
@@ -284,6 +290,7 @@
                             document.getElementById(copyStatus).disabled = true
                             document.getElementById(moreStatus).disabled = true
                             $('#'+moreStatus).removeClass().addClass('btn more-btn-disable')
+                            pHolder.html(statusLongUrl+" "+data)
                         }
                     }
                 })

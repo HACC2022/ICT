@@ -31,7 +31,7 @@
 
             <div class="input-group">
                 <input type="url" class="form-control" id="longLink" name="longLink" aria-describedby="inputUrl"
-                    placeholder="Enter URL">
+                    placeholder="Enter URL with a .gov domain (eg. hawaii.gov)">
                 <div class="input-group-append">
                     <button type="submit" class="btn submitBtnStyle" id="submit-btn-function">Submit</button>
                 </div>
@@ -51,12 +51,10 @@
                     <button name="copy" class="btn submitBtnStyle copy-btn" id="copy-btn">Copy</button>
                 </div>
             </div>
-            </div>
-           
         </div>
+           
     </form>
-    </div>
-</form>
+</div>
 
 <script>
     var checkBox = document.getElementById("veri");
@@ -93,37 +91,38 @@
                     if (data.includes("sCode")){
                         alert("The link you have provided already exists. Please note that the initial short link will be provided.");
                         text = data.slice(5);
+                        $('h4').html("Here is the Existing Short URL: "+text)
                         h4Style.style = "color:red;"
                         s.style.display = "inline"
                         checkBox.checked = false;
                         textbox.value = "";
                     }
-                    if (data != "error"){
-                        $('h4').html("Here is the Existing Short URL: "+text)
-                        s.style.display = "inline"
-                        checkBox.checked = false;
-                        textbox.value = "";
-                    }
-                    if(data == 'error'){
+                    else if(data == 'error'){
                         alert("Please provide a link containing the .gov domain!");
                         s.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
                         $('h4').html("")
                     }
-                    if (data == "Bad"){
+                    else if (data == "Bad"){
                         alert("The link you have provide is Bad. Please provide another link");
                         s.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
                         $('h4').html("")
                     }
-                    if (data == "No Server"){
+                    else if (data == "No Server"){
                         alert("The link does not exist. Provide check for mispell or provide another link");
                         s.style.display = "none"
                         checkBox.checked = false;
                         textbox.value = "";
                         $('h4').html("")
+                    }
+                    else if (data != "error"){
+                        $('h4').html(data)
+                        s.style.display = "inline"
+                        checkBox.checked = false;
+                        textbox.value = "";
                     }
                 }
             });
